@@ -1,0 +1,363 @@
+import { useEffect, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import {
+  BookOpen,
+  ChevronDown,
+  Headphones,
+  Home,
+  LineChart,
+  Megaphone,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Plus,
+  Radio,
+  Smartphone,
+  TrendingUp,
+  X,
+} from "lucide-react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { env } from "@/lib/env";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
+import { useSolBalance } from "@/hooks/useBalances";
+import { useUiStore } from "@/stores/uiStore";
+import { formatSol } from "@/lib/format";
+
+const NAV = [
+  { to: "/", label: "Home", icon: Home, end: true },
+  { to: "/callouts", label: "Callouts", icon: Megaphone, end: false },
+  { to: "/live", label: "Live", icon: Radio, end: false },
+  { to: "/support", label: "Support", icon: Headphones, end: false },
+  { to: "/terminal", label: "Terminal", icon: LineChart, end: false },
+  { to: "/?sort=trending", label: "Trending", icon: TrendingUp, end: false },
+  { to: "/how-it-works", label: "How it works", icon: BookOpen, end: false },
+] as const;
+
+/**
+ * Two modes, one component:
+ *   - Desktop (lg+): static flex child, width animates between 72px and 220px
+ *     via the persisted `sidebarCollapsed` flag in uiStore.
+ *   - Mobile: fixed-positioned drawer that slides in from the left when the
+ *     `sidebarOpenMobile` flag is true (set by the hamburger button in TopBar).
+ *
+ * The mobile drawer auto-closes on route change, on Esc, and on backdrop tap.
+ * The desktop "collapsed" state never applies on mobile — the drawer always
+ * renders full-width labels so taps are easy.
+ */
+export function Sidebar(): JSX.Element {
+  const collapsed = useUiStore((s) => s.sidebarCollapsed);
+  const toggleDesktop = useUiStore((s) => s.toggleSidebar);
+  const mobileOpen = useUiStore((s) => s.sidebarOpenMobile);
+  const setMobileOpen = useUiStore((s) => s.setSidebarOpenMobile);
+
+  const location = useLocation();
+  // Close the mobile drawer when the route changes
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname, location.search, setMobileOpen]);
+
+  // Esc closes the mobile drawer
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKey = (e: KeyboardEvent): void => {
+      if (e.key === "Escape") setMobileOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [mobileOpen, setMobileOpen]);
+
+  // Lock body scroll while the mobile drawer is open
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobileOpen]);
+
+  // On mobile, the drawer always renders full-width (no icon-only mode); on
+  // desktop, respect the persisted collapsed flag.
+  const showCollapsedLayout = collapsed && !mobileOpen;
+
+  return (
+    <>
+      {/* Mobile backdrop */}
+      <button
+        type="button"
+        aria-label="Close navigation"
+        onClick={() => setMobileOpen(false)}
+        className={cn(
+          "lg:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity duration-200",
+          mobileOpen ? "opacity-100" : "opacity-0 pointer-events-none",
+        )}
+      />
+
+      <aside
+        className={cn(
+          "flex flex-col border-r border-border bg-surface/95 backdrop-blur-md h-full",
+          // Mobile: fixed drawer that slides in/out
+          "fixed inset-y-0 left-0 z-50 w-[260px]",
+          "transform transition-transform duration-200 ease-out",
+          mobileOpen ? "translate-x-0" : "-translate-x-full",
+          // Desktop: become a normal static flex child, drop the transform,
+          // pick up the persisted width animation.
+          "lg:static lg:translate-x-0 lg:transform-none",
+          "lg:transition-[width] lg:duration-200",
+          showCollapsedLayout ? "lg:w-[72px]" : "lg:w-[220px]",
+        )}
+        aria-hidden={
+          // The drawer is always "present" on desktop. On mobile it's only
+          // accessible to assistive tech when open.
+          typeof window !== "undefined" &&
+          window.innerWidth < 1024 &&
+          !mobileOpen
+        }
+      >
+        <div
+          className={cn(
+            "border-b border-border",
+            showCollapsedLayout
+              ? "px-2 py-3 flex flex-col items-center gap-2"
+              : "px-4 pt-5 pb-4",
+          )}
+        >
+          <div className="flex items-center gap-2 w-full">
+            <NavLink
+              to="/"
+              className={cn(
+                "flex items-center gap-2.5 group min-w-0",
+                showCollapsedLayout && "justify-center w-full",
+              )}
+              title={showCollapsedLayout ? env.platformName : undefined}
+            >
+              <img
+                src="/Images/Sidedrawer/pump-logo.svg"
+                alt="Pump Logo"
+                className="h-[24px] w-[24px] object-contain"
+              />
+
+              {!showCollapsedLayout ? (
+                <div className="min-w-0">
+                  <svg
+                    class="mt-px"
+                    fill="none"
+                    height="16"
+                    viewBox="0 0 73 16"
+                    width="73"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 12.3234V0.13617H4.31202C5.09913 0.13617 5.80639 0.300709 6.4338 0.629787C7.06121 0.947518 7.55743 1.39574 7.92247 1.97447C8.29892 2.55319 8.48714 3.22269 8.48714 3.98298C8.48714 4.74326 8.29892 5.41844 7.92247 6.00851C7.55743 6.58723 7.06121 7.04113 6.4338 7.37021C5.80639 7.68794 5.09913 7.84681 4.31202 7.84681H1.28334V5.66808H4.38046C4.77972 5.66808 5.11624 5.58865 5.39002 5.42979C5.6638 5.27092 5.86913 5.06667 6.00602 4.81702C6.14291 4.55603 6.21136 4.27801 6.21136 3.98298C6.21136 3.68794 6.14291 3.4156 6.00602 3.16596C5.86913 2.91631 5.6638 2.71206 5.39002 2.55319C5.11624 2.39433 4.77972 2.31489 4.38046 2.31489H2.31001V12.3234H0Z"
+                      fill="#FAFAFA"
+                    ></path>
+                    <path
+                      d="M12.9086 12.5957C11.8363 12.5957 11.0321 12.2667 10.496 11.6085C9.95982 10.9504 9.69174 10.0539 9.69174 8.91915V3.64255H11.9333V8.64681C11.9333 9.23688 12.0759 9.70213 12.3611 10.0426C12.6577 10.3716 13.0341 10.5362 13.4904 10.5362C13.9353 10.5362 14.3118 10.4284 14.6198 10.2128C14.9278 9.98582 15.1616 9.68511 15.3213 9.31064C15.4924 8.93617 15.578 8.52199 15.578 8.06809V3.64255H17.8195V12.3234H15.7149V11.234H15.578C15.4069 11.5064 15.1844 11.7447 14.9106 11.9489C14.6369 12.1532 14.3289 12.3121 13.9866 12.4255C13.6558 12.539 13.2965 12.5957 12.9086 12.5957Z"
+                      fill="#FAFAFA"
+                    ></path>
+                    <path
+                      d="M19.6279 12.3234V3.64255H21.7325V4.73192H21.8694C22.0519 4.45957 22.2744 4.22128 22.5368 4.01702C22.7991 3.81277 23.0957 3.6539 23.4265 3.54043C23.7688 3.42695 24.1338 3.37021 24.5216 3.37021C25.1605 3.37021 25.7023 3.51773 26.1472 3.81277C26.6035 4.1078 26.9229 4.47092 27.1054 4.90213C27.3678 4.48227 27.7385 4.12482 28.2177 3.82979C28.7082 3.5234 29.3128 3.37021 30.0314 3.37021C31.0467 3.37021 31.8053 3.6766 32.3072 4.28936C32.8206 4.90213 33.0772 5.71915 33.0772 6.74043V12.3234H30.8528V7.14894C30.8528 6.59291 30.7216 6.17305 30.4592 5.88936C30.1969 5.59433 29.8432 5.44681 29.3983 5.44681C29.0105 5.44681 28.6683 5.55461 28.3717 5.77021C28.0865 5.97447 27.864 6.26383 27.7043 6.6383C27.556 7.01277 27.4819 7.44965 27.4819 7.94894V12.3234H25.2403V7.14894C25.2403 6.59291 25.1034 6.17305 24.8296 5.88936C24.5673 5.59433 24.1908 5.44681 23.7003 5.44681C23.3353 5.44681 23.0102 5.55461 22.725 5.77021C22.4512 5.97447 22.2402 6.26383 22.0919 6.6383C21.9436 7.01277 21.8694 7.44965 21.8694 7.94894V12.3234H19.6279Z"
+                      fill="#FAFAFA"
+                    ></path>
+                    <path
+                      d="M34.826 16V3.64255H36.9307V4.69787H37.0676C37.2159 4.47092 37.4098 4.25532 37.6494 4.05106C37.9004 3.84681 38.1969 3.68227 38.5392 3.55745C38.8814 3.43262 39.2635 3.37021 39.6856 3.37021C40.4841 3.37021 41.1971 3.56879 41.8245 3.96596C42.4633 4.35177 42.9653 4.89078 43.3303 5.58298C43.7067 6.27518 43.895 7.07518 43.895 7.98298C43.895 8.89078 43.7067 9.69078 43.3303 10.383C42.9653 11.0752 42.4633 11.6199 41.8245 12.017C41.1971 12.4028 40.4841 12.5957 39.6856 12.5957C39.0582 12.5957 38.5164 12.4652 38.0601 12.2043C37.6152 11.9319 37.2843 11.6255 37.0676 11.2851H36.9307L37.0676 12.5106V16H34.826ZM39.2921 10.5362C39.7141 10.5362 40.102 10.434 40.4556 10.2298C40.8207 10.0142 41.1116 9.71347 41.3283 9.32766C41.5564 8.94184 41.6705 8.49362 41.6705 7.98298C41.6705 7.46099 41.5564 7.01277 41.3283 6.6383C41.1116 6.26383 40.8207 5.97447 40.4556 5.77021C40.102 5.55461 39.7141 5.44681 39.2921 5.44681C38.8814 5.44681 38.4935 5.55461 38.1285 5.77021C37.7749 5.97447 37.484 6.2695 37.2558 6.65532C37.0391 7.02979 36.9307 7.47234 36.9307 7.98298C36.9307 8.49362 37.0391 8.94184 37.2558 9.32766C37.484 9.70213 37.7749 9.99716 38.1285 10.2128C38.4935 10.4284 38.8814 10.5362 39.2921 10.5362Z"
+                      fill="#FAFAFA"
+                    ></path>
+                    <path
+                      d="M46.3296 12.4255C45.9189 12.4255 45.5653 12.2837 45.2687 12C44.9835 11.705 44.8409 11.3532 44.8409 10.9447C44.8409 10.5362 44.9835 10.1901 45.2687 9.90638C45.5653 9.62269 45.9189 9.48085 46.3296 9.48085C46.7402 9.48085 47.0882 9.62269 47.3733 9.90638C47.6699 10.1901 47.8182 10.5362 47.8182 10.9447C47.8182 11.3532 47.6699 11.705 47.3733 12C47.0882 12.2837 46.7402 12.4255 46.3296 12.4255Z"
+                      fill="#86EFAC"
+                    ></path>
+                    <path
+                      d="M47.9958 5.54894V3.64255H49.6384V5.54894H47.9958ZM49.5529 12.3234V3.16596C49.5529 2.51915 49.6841 1.95745 49.9464 1.48085C50.2202 1.00426 50.5967 0.641135 51.0758 0.391489C51.5663 0.130496 52.1424 0 52.804 0C53.0322 0 53.266 0.0170214 53.5056 0.0510642C53.7451 0.0851063 53.9733 0.130496 54.19 0.187234V2.36596C53.9961 2.27518 53.8079 2.20709 53.6253 2.1617C53.4428 2.11631 53.2603 2.09362 53.0778 2.09362C52.6899 2.09362 52.3762 2.20709 52.1367 2.43404C51.9085 2.64965 51.7944 2.95603 51.7944 3.35319V12.3234H49.5529ZM51.7089 5.54894V3.64255H53.9333V5.54894H51.7089Z"
+                      fill="#FAFAFA"
+                    ></path>
+                    <path
+                      d="M58.153 12.5957C57.0807 12.5957 56.2765 12.2667 55.7403 11.6085C55.2042 10.9504 54.9361 10.0539 54.9361 8.91915V3.64255H57.1776V8.64681C57.1776 9.23688 57.3202 9.70213 57.6054 10.0426C57.902 10.3716 58.2785 10.5362 58.7348 10.5362C59.1797 10.5362 59.5561 10.4284 59.8641 10.2128C60.1721 9.98582 60.406 9.68511 60.5657 9.31064C60.7368 8.93617 60.8223 8.52199 60.8223 8.06809V3.64255H63.0639V12.3234H60.9592V11.234H60.8223C60.6512 11.5064 60.4288 11.7447 60.155 11.9489C59.8812 12.1532 59.5732 12.3121 59.231 12.4255C58.9002 12.539 58.5408 12.5957 58.153 12.5957Z"
+                      fill="#FAFAFA"
+                    ></path>
+                    <path
+                      d="M64.8722 12.3234V3.64255H66.9769V4.73192H67.1138C67.3761 4.31206 67.7469 3.98298 68.226 3.74468C68.7051 3.49504 69.2241 3.37021 69.7831 3.37021C70.8554 3.37021 71.6596 3.69362 72.1958 4.34043C72.7319 4.98723 73 5.84965 73 6.92766V12.3234H70.7584V7.2C70.7584 6.63262 70.6101 6.20142 70.3135 5.90638C70.0284 5.6 69.6348 5.44681 69.1329 5.44681C68.7222 5.44681 68.3629 5.56028 68.0549 5.78723C67.7583 6.00284 67.5244 6.29787 67.3533 6.67234C67.1936 7.03546 67.1138 7.44397 67.1138 7.89787V12.3234H64.8722Z"
+                      fill="#FAFAFA"
+                    ></path>
+                  </svg>
+                  {/* <span className="text-[10px] uppercase tracking-wider text-text-muted font-mono">
+                    {env.solanaNetwork}
+                  </span> */}
+                </div>
+              ) : null}
+            </NavLink>
+
+            {/* Close (mobile) — only renders <lg */}
+            <button
+              type="button"
+              onClick={() => setMobileOpen(false)}
+              aria-label="Close navigation"
+              className="ml-auto p-1.5 rounded-md text-text-muted hover:text-text-primary hover:bg-surface-elevated transition-colors lg:hidden"
+            >
+              <X className="h-4 w-4" />
+            </button>
+
+            {/* Collapse (desktop) — only renders ≥lg */}
+            {!showCollapsedLayout ? (
+              <button
+                type="button"
+                onClick={toggleDesktop}
+                aria-label="Collapse sidebar"
+                className="ml-auto p-1.5 rounded-md text-text-muted hover:text-text-primary hover:bg-surface-elevated transition-colors hidden lg:inline-flex"
+              >
+                <PanelLeftClose className="h-4 w-4" />
+              </button>
+            ) : null}
+          </div>
+
+          {/* Expand button — desktop-only, shows when collapsed */}
+          {showCollapsedLayout ? (
+            <button
+              type="button"
+              onClick={toggleDesktop}
+              aria-label="Expand sidebar"
+              className="grid place-items-center h-8 w-8 rounded-md text-text-muted hover:text-text-primary hover:bg-surface-elevated transition-colors hidden lg:grid"
+            >
+              <PanelLeftOpen className="h-4 w-4" />
+            </button>
+          ) : null}
+        </div>
+
+        <nav
+          className={cn(
+            "flex-1 py-4 flex flex-col gap-1 overflow-y-auto",
+            showCollapsedLayout ? "px-2 items-stretch" : "px-3",
+          )}
+        >
+          {NAV.map(({ to, label, icon: Icon, end }) => (
+            <NavLink
+              key={to}
+              to={to}
+              end={end}
+              title={showCollapsedLayout ? label : undefined}
+              className={({ isActive }) =>
+                cn(
+                  "relative flex items-center rounded-xl text-[14px] font-medium transition-colors",
+                  showCollapsedLayout
+                    ? "justify-center h-10 w-full"
+                    : "gap-3 px-3 py-2.5",
+                     isActive ? "font-medium" : "font-normal",
+                  isActive
+                    ? "text-text-[#FAFAFA] bg-surface-elevated"
+                    : "text-text-[#FAFAFA] hover:text-text-primary hover:bg-surface-elevated/60",
+                )
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  {isActive && !showCollapsedLayout ? (
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-primary" />
+                  ) : null}
+                  {isActive && showCollapsedLayout ? (
+                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-r-full bg-primary" />
+                  ) : null}
+                  <Icon className="h-4 w-4 shrink-0" />
+                  {!showCollapsedLayout ? label : null}
+                </>
+              )}
+            </NavLink>
+          ))}
+        </nav>
+
+        <div
+          className={cn(
+            "flex flex-col gap-2 border-t border-border",
+            showCollapsedLayout ? "p-2" : "p-3",
+          )}
+        >
+          <NavLink
+            to="/create"
+            title={showCollapsedLayout ? "Create coin" : undefined}
+          >
+            {showCollapsedLayout ? (
+              <span
+                className={cn(
+                  "flex items-center justify-center h-10 w-full rounded-xl",
+                  "bg-primary text-background hover:bg-primary-600 transition-colors",
+                )}
+              >
+                <Plus className="h-4 w-4" />
+              </span>
+            ) : (
+              <Button
+                variant="primary"
+                fullWidth
+                size="lg"
+                leftIcon={<Plus className="h-4 w-4" />}
+              >
+                Create coin
+              </Button>
+            )}
+          </NavLink>
+          <button
+            type="button"
+            className={cn(
+              "flex items-center rounded-xl bg-surface-elevated border border-border text-sm font-medium text-text-primary hover:border-text-muted/40 transition-colors",
+              showCollapsedLayout
+                ? "justify-center h-10 w-full"
+                : "gap-2 h-10 px-3",
+            )}
+            title="Try the mobile app (coming soon)"
+          >
+            <Smartphone className="h-4 w-4" />
+            {!showCollapsedLayout ? <span>Try app</span> : null}
+          </button>
+          {!showCollapsedLayout ? <HoldingsDrawer /> : null}
+        </div>
+      </aside>
+    </>
+  );
+}
+
+function HoldingsDrawer(): JSX.Element {
+  const [open, setOpen] = useState(false);
+  const { publicKey } = useWallet();
+  const sol = useSolBalance();
+
+  return (
+    <div className="rounded-xl border border-border bg-surface-elevated">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between h-10 px-3 text-xs font-medium text-text-muted hover:text-text-primary"
+      >
+        <span className="uppercase tracking-wider">Holdings</span>
+        <ChevronDown
+          className={cn(
+            "h-3.5 w-3.5 transition-transform",
+            open && "rotate-180",
+          )}
+        />
+      </button>
+      {open ? (
+        <div className="px-3 pb-3 text-xs">
+          {!publicKey ? (
+            <p className="text-text-muted">Connect a wallet to see holdings.</p>
+          ) : (
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-text-muted">SOL</span>
+                <span className="font-mono text-text-primary">
+                  {sol.lamports == null
+                    ? "—"
+                    : formatSol(sol.lamports, {
+                        withUnit: false,
+                        fractionDigits: 4,
+                      })}
+                </span>
+              </div>
+              <p className="text-[11px] text-text-muted">
+                Tokens are listed on your profile.
+              </p>
+            </div>
+          )}
+        </div>
+      ) : null}
+    </div>
+  );
+}

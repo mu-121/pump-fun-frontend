@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  html {
+    background-color: theme(colors.background);
+    color: theme(colors.text.primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body,
+  input,
+  textarea,
+  button,
+  select {
+    @apply font-sans;
+  }
+
+  body {
+    @apply bg-background text-text-primary;
+  }
+
+  *,
+  *::before,
+  *::after {
+    border-color: theme(colors.border);
+  }
+
+  /* Tabular numbers for the trading-terminal feel */
+  .num,
+  .font-mono {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: theme(colors.border);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: theme(colors.surface-elevated);
+  }
+
+  /* Wallet-adapter overrides — match our dark theme */
+  .wallet-adapter-button {
+    @apply !bg-primary !text-background !font-semibold;
+    border-radius: 9999px !important;
+    height: 2.25rem !important;
+    padding: 0 1rem !important;
+    font-size: 0.8125rem !important;
+  }
+  .wallet-adapter-button:hover {
+    @apply !bg-primary-600;
+  }
+  .wallet-adapter-button-trigger {
+    border-radius: 9999px !important;
+  }
+  .wallet-adapter-modal-wrapper {
+    @apply !bg-surface !border !border-border;
+  }
+  .wallet-adapter-modal-title {
+    @apply !text-text-primary;
+  }
+  .wallet-adapter-modal-list .wallet-adapter-button {
+    @apply !bg-surface-elevated !text-text-primary;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(19, 21, 26, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+}
