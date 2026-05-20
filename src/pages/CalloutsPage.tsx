@@ -156,64 +156,54 @@ export function CalloutsPage(): JSX.Element {
       </header>
 
       {/* Top Callers Card */}
-      <div className="bg-[#0d0d0f] border border-neutral-800/80 rounded-2xl p-5 flex flex-col gap-4 shadow-xl">
-        <div className="flex items-center justify-between gap-3 flex-wrap">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-yellow-500/10 border border-yellow-500/25 flex items-center justify-center text-[#eab308]">
-              <Crown className="w-4.5 h-4.5 fill-yellow-500/10" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-bold text-white">Top callers</span>
-              <span className="text-[9px] uppercase font-extrabold text-neutral-500 tracking-wider mt-0.5">
-                LAST 7D · TOP 3
-              </span>
+      <section aria-label="Top callout callers" className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-bg-secondary/80 via-bg-primary to-bg-secondary/80 p-4">
+        <div aria-hidden="true" className="pointer-events-none absolute -top-20 -right-12 size-56 rounded-full bg-amber-300/10 blur-3xl"></div>
+        <header className="relative flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="relative flex size-7 items-center justify-center rounded-md bg-gradient-to-br from-amber-300/90 via-amber-400/70 to-amber-500/40 text-black shadow-[0_4px_16px_-8px_rgba(252,211,77,0.6)]">
+              <svg className="size-3.5" aria-hidden="true" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4.33416 18.204L2 7L8 10L12 4L16 10L22 7L19.6658 18.204C19.5692 18.6677 19.1605 19 18.6869 19H5.31314C4.83946 19 4.43077 18.6677 4.33416 18.204Z" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="round"></path></svg>
+            </span>
+            <div className="flex flex-col leading-tight">
+              <p className="text-sm font-semibold text-text-primary">Top callers</p>
+              <p className="text-[11px] uppercase tracking-wider text-text-tertiary">Last 7d · Top 3</p>
             </div>
           </div>
-          <button
-            type="button"
-            className="text-[10px] font-bold tracking-wider uppercase text-[#22c55e] bg-[#22c55e]/10 border border-[#22c55e]/20 px-3.5 py-1.5 rounded-full hover:bg-[#22c55e]/20 transition-all flex items-center gap-1 shrink-0 shadow-sm"
-          >
-            View Leaderboard <ArrowUpRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
+          <a className="group inline-flex items-center gap-1.5 rounded-full border border-primary-green/30 bg-primary-green/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary-green transition-all hover:border-primary-green/60 hover:bg-primary-green/15" href="/callouts/leaderboard">
+            View leaderboard
+            <svg className="size-3 transition-transform group-hover:translate-x-0.5" aria-hidden="true" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 6L20 12L14 18M19 12H4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path></svg>
+          </a>
+        </header>
+        <div className="relative mt-3">
+          <ol className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+            {LEADERBOARD.slice(0, 3).map((row, i) => {
+              const rankBadge =
+                i === 0
+                  ? 'border-amber-300/40 bg-amber-400/10 text-amber-200'
+                  : i === 1
+                    ? 'border-slate-200/30 bg-slate-200/10 text-slate-100'
+                    : 'border-orange-400/30 bg-orange-400/10 text-orange-200';
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-          {LEADERBOARD.slice(0, 3).map((row, i) => {
-            const rankBadge =
-              i === 0
-                ? 'text-[#eab308] bg-yellow-500/10 border-yellow-500/20'
-                : i === 1
-                  ? 'text-neutral-300 bg-neutral-350/10 border-neutral-350/20'
-                  : 'text-amber-650 bg-amber-655/10 border-amber-655/20';
-
-            const multiplier = (row.avgGain / 100).toFixed(1);
-            return (
-              <div
-                key={row.handle}
-                className="bg-[#131315] border border-neutral-800/80 rounded-xl p-3.5 flex items-center justify-between hover:border-neutral-700/50 transition-all duration-200 shadow-sm"
-              >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <span
-                    className={cn(
-                      'text-[10px] font-extrabold px-2 py-0.5 rounded border font-mono shrink-0 select-none',
-                      rankBadge,
-                    )}
-                  >
-                    #{i + 1}
-                  </span>
-                  <div className="shrink-0">
-                    <Avatar seed={row.avatar} handle={row.handle} />
+              const multiplier = (row.avgGain / 100).toFixed(1);
+              return (
+                <li key={row.handle} style={{ opacity: 1, transform: 'none' }}>
+                  <div className="group flex h-full items-center gap-3 rounded-xl border border-white/10 bg-bg-primary/55 px-2.5 py-2 transition-all hover:-translate-y-px hover:border-white/20 hover:bg-bg-primary/80 cursor-pointer">
+                    <span className={cn('inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md border text-[11px] font-bold tabular-nums', rankBadge)}>
+                      #{i + 1}
+                    </span>
+                    <span className="size-9 shrink-0 overflow-hidden rounded-full border border-white/10 bg-bg-secondary flex items-center justify-center">
+                      <Avatar seed={row.avatar} handle={row.handle} className="w-full h-full text-xs" />
+                    </span>
+                    <div className="flex min-w-0 flex-1 flex-col leading-tight">
+                      <span className="truncate text-sm font-semibold text-text-primary group-hover:underline">{row.handle}</span>
+                    </div>
+                    <span className="rounded-full border px-2 py-0.5 text-[11px] font-bold tabular-nums border-positive/30 bg-positive/15 text-positive">Avg {multiplier}x</span>
                   </div>
-                  <span className="text-xs font-bold text-white truncate">{row.handle}</span>
-                </div>
-                <span className="text-[10px] font-black text-[#22c55e] bg-[#22c55e]/10 border border-[#22c55e]/20 px-2.5 py-0.5 rounded-full shrink-0">
-                  Avg {multiplier}x
-                </span>
-              </div>
-            );
-          })}
+                </li>
+              );
+            })}
+          </ol>
         </div>
-      </div>
+      </section>
 
       {/* Latest Callouts Feed List */}
       <div className="flex flex-col gap-3">
@@ -338,7 +328,7 @@ export function CalloutsPage(): JSX.Element {
   );
 }
 
-function Avatar({ seed, handle }: { seed: string; handle?: string }): JSX.Element {
+function Avatar({ seed, handle, className }: { seed: string; handle?: string; className?: string }): JSX.Element {
   const styleClass = handle
     ? getAvatarStyle(handle)
     : 'bg-gradient-to-br from-accent to-primary text-background';
@@ -347,6 +337,7 @@ function Avatar({ seed, handle }: { seed: string; handle?: string }): JSX.Elemen
       className={cn(
         'grid place-items-center h-8 w-8 rounded-full text-[11px] font-bold shrink-0 border select-none',
         styleClass,
+        className
       )}
     >
       {seed}
