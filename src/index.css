@@ -50,13 +50,16 @@
     width: 10px;
     height: 10px;
   }
+
   ::-webkit-scrollbar-track {
     background: transparent;
   }
+
   ::-webkit-scrollbar-thumb {
     background: theme(colors.border);
     border-radius: 4px;
   }
+
   ::-webkit-scrollbar-thumb:hover {
     background: theme(colors.surface-elevated);
   }
@@ -69,18 +72,23 @@
     padding: 0 1rem !important;
     font-size: 0.8125rem !important;
   }
+
   .wallet-adapter-button:hover {
     @apply !bg-primary-600;
   }
+
   .wallet-adapter-button-trigger {
     border-radius: 9999px !important;
   }
+
   .wallet-adapter-modal-wrapper {
     @apply !bg-surface !border !border-border;
   }
+
   .wallet-adapter-modal-title {
     @apply !text-text-primary;
   }
+
   .wallet-adapter-modal-list .wallet-adapter-button {
     @apply !bg-surface-elevated !text-text-primary;
   }
@@ -91,5 +99,36 @@
     background: rgba(19, 21, 26, 0.7);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+  }
+
+  .to-bg-secondary {
+    --tw-gradient-to: #18191b var(--tw-gradient-to-position, );
+  }
+
+  .via-bg-primary {
+    --tw-gradient-to: #11111300 var(--tw-gradient-to-position, );
+    --tw-gradient-stops: var(--tw-gradient-from), #111113 var(--tw-gradient-via-position, ), var(--tw-gradient-to);
+  }
+
+  .from-bg-secondary {
+    --tw-gradient-from: #18191b var(--tw-gradient-from-position, );
+    --tw-gradient-to: #18191b00 var(--tw-gradient-to-position, );
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+  }
+
+  .border-white\/10 {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .bg-primary-green\/15 {
+    background-color: rgba(74, 222, 128, 0.15);
+  }
+
+  .text-text-primary {
+    color: #e7e9ec;
+  }
+
+  .text-text-tertiary {
+    color: #8b91a0;
   }
 }
