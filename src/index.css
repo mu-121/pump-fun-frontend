@@ -3,6 +3,38 @@
 @tailwind utilities;
 
 @layer base {
+  @font-face {
+    font-family: 'Inter';
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url('/fonts/Inter/static/Inter_18pt-Regular.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'Inter';
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+    src: url('/fonts/Inter/static/Inter_18pt-Medium.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'Inter';
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+    src: url('/fonts/Inter/static/Inter_18pt-SemiBold.ttf') format('truetype');
+  }
+
+  @font-face {
+    font-family: 'Inter';
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    src: url('/fonts/Inter/static/Inter_18pt-Bold.ttf') format('truetype');
+  }
+
   :root {
     color-scheme: dark;
   }
@@ -50,13 +82,16 @@
     width: 10px;
     height: 10px;
   }
+
   ::-webkit-scrollbar-track {
     background: transparent;
   }
+
   ::-webkit-scrollbar-thumb {
     background: theme(colors.border);
     border-radius: 4px;
   }
+
   ::-webkit-scrollbar-thumb:hover {
     background: theme(colors.surface-elevated);
   }
@@ -69,18 +104,23 @@
     padding: 0 1rem !important;
     font-size: 0.8125rem !important;
   }
+
   .wallet-adapter-button:hover {
     @apply !bg-primary-600;
   }
+
   .wallet-adapter-button-trigger {
     border-radius: 9999px !important;
   }
+
   .wallet-adapter-modal-wrapper {
     @apply !bg-surface !border !border-border;
   }
+
   .wallet-adapter-modal-title {
     @apply !text-text-primary;
   }
+
   .wallet-adapter-modal-list .wallet-adapter-button {
     @apply !bg-surface-elevated !text-text-primary;
   }
@@ -92,13 +132,54 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
-}
 
-.no-scrollbar {
-  -ms-overflow-style: none;  /* IE & Edge */
-  scrollbar-width: none;     /* Firefox */
-}
+  .to-bg-secondary {
+    --tw-gradient-to: #18191b var(--tw-gradient-to-position, );
+  }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;             /* Chrome, Safari */
+  .via-bg-primary {
+    --tw-gradient-to: #11111300 var(--tw-gradient-to-position, );
+    --tw-gradient-stops: var(--tw-gradient-from), #111113 var(--tw-gradient-via-position, ), var(--tw-gradient-to);
+  }
+
+  .from-bg-secondary {
+    --tw-gradient-from: #18191b var(--tw-gradient-from-position, );
+    --tw-gradient-to: #18191b00 var(--tw-gradient-to-position, );
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+  }
+
+  .border-white\/10 {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .bg-primary-green\/10 {
+    background-color: #84efac1a;
+  }
+
+  .bg-primary-green\/15 {
+    background-color: #84efac26;
+  }
+
+  .border-primary-green\/30 {
+    border-color: #84efac4d;
+  }
+
+  .hover\:border-primary-green\/60:hover {
+    border-color: #84efac99;
+  }
+
+  .text-primary-green {
+    --tw-text-opacity: 1;
+    color: rgb(132 239 172 / var(--tw-text-opacity, 1));
+  }
+
+  .text-text-primary {
+    --tw-text-opacity: 1;
+    color: rgb(250 250 250 / var(--tw-text-opacity, 1));
+  }
+
+  .text-text-tertiary {
+    --tw-text-opacity: 1;
+    color: rgb(161 161 170 / var(--tw-text-opacity, 1));
+  }
 }

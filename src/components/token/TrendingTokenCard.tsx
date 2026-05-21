@@ -20,7 +20,7 @@ export const TrendingTokenCard = memo(function TrendingTokenCard({
     <Link
       to={`/token/${token.mintAddress}`}
       className={cn(
-        "shrink-0 w-[240px] sm:w-[264px] snap-start group",
+        "shrink-0 w-[240px] sm:w-[264px] snap-start group font-['Inter']",
         "flex flex-col gap-y-2",
         className,
       )}

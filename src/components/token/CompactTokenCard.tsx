@@ -1,9 +1,9 @@
-import { memo } from 'react';
-import { Link } from 'react-router-dom';
-import { bondingProgress, formatMarketCap } from '@/lib/format';
-import { curveReserves } from '@/lib/curve';
-import { cn } from '@/lib/utils';
-import type { Token } from '@/types';
+import { memo } from "react";
+import { Link } from "react-router-dom";
+import { bondingProgress, formatMarketCap } from "@/lib/format";
+import { curveReserves } from "@/lib/curve";
+import { cn } from "@/lib/utils";
+import type { Token } from "@/types";
 
 interface CompactTokenCardProps {
   token: Token;
@@ -17,7 +17,7 @@ export const CompactTokenCard = memo(function CompactTokenCard({
   rank,
   className,
 }: CompactTokenCardProps): JSX.Element {
-  const initial = (token.symbol || token.name || '?').slice(0, 1).toUpperCase();
+  const initial = (token.symbol || token.name || "?").slice(0, 1).toUpperCase();
   const progress = bondingProgress(curveReserves(token).solLamports);
   const pct = Math.round(progress * 100);
 
@@ -25,13 +25,13 @@ export const CompactTokenCard = memo(function CompactTokenCard({
     <Link
       to={`/token/${token.mintAddress}`}
       className={cn(
-        "group relative overflow-hidden flex h-[58px] w-[228px] items-center gap-3 rounded-[12px] border border-[#27272A] bg-[#18181B] px-3 transition-colors hover:border-pink-400/40",
+        "group relative overflow-hidden flex h-[58px] w-[228px] items-center gap-3 rounded-[12px] border border-[#27272A] bg-[#18181B] px-3 transition-colors hover:border-pink-400/40 font-['Inter']",
         className,
       )}
     >
       {/* Hover glow overlay */}
       <div className="pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(120%_60%_at_0%_0%,rgba(244,114,182,0.16),transparent_60%)] opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-      
+
       <span className="text-[11px] font-medium text-[#71717A] transition-colors group-hover:text-pink-400 w-3 text-center shrink-0 relative z-10">
         {rank}
       </span>
@@ -64,7 +64,7 @@ export const CompactTokenCard = memo(function CompactTokenCard({
 
       <div className="relative z-10 flex flex-1 flex-col justify-center min-w-0">
         <p className="text-[13px] font-semibold text-[#FAFAFA] truncate leading-tight">
-          {token.symbol?.startsWith('$') ? token.symbol : `$${token.symbol}`}
+          {token.symbol?.startsWith("$") ? token.symbol : `$${token.symbol}`}
         </p>
         <p className="text-[11px] text-[#A1A1AA] truncate leading-tight mt-[1px]">
           {token.name}
@@ -78,8 +78,30 @@ export const CompactTokenCard = memo(function CompactTokenCard({
             return value?.startsWith("$") ? value : `$${value}`;
           })()}
         </p>
-        <p className="text-[11px] text-[#5FE992] leading-tight mt-[1px]">
-          ↑0.0%
+        <p
+          className={cn(
+            "inline-flex items-center gap-[2px] text-[11px] leading-tight mt-[1px] tabular-nums",
+            pct > 0 ? "text-[#5FE992]" : "text-[#ED7878]",
+          )}
+        >
+          <svg
+            aria-hidden="true"
+            width="10px"
+            height="10px"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className={pct > 0 ? "rotate-0" : "rotate-180"}
+          >
+            <path
+              d="M6 10L12 4L18 10M12 5V20"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          {pct}%
         </p>
       </div>
     </Link>
