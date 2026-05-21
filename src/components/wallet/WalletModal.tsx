@@ -97,6 +97,7 @@ export function WalletModal(): JSX.Element | null {
         aria-modal="true"
         aria-labelledby="modal-title"
         className="relative w-full max-w-[356px] bg-[#0c0d0e] border border-[#202227] rounded-3xl p-6 shadow-2xl flex flex-col gap-5 text-text-primary z-10"
+        style={{ fontFamily: '"Inter", sans-serif' }}
       >
         {/* Header section */}
         <div className="flex items-start justify-between">
@@ -146,7 +147,7 @@ export function WalletModal(): JSX.Element | null {
             <button
               type="button"
               onClick={() => handleFeaturePlaceholder('Google')}
-              className="group relative flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl border border-white/10 bg-white px-3 py-2.5 text-sm font-semibold text-zinc-950 shadow-sm transition-all duration-150 hover:-translate-y-px hover:bg-zinc-100"
+              className="group relative flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl border border-white/10 bg-white px-3 py-2.5 text-sm font-[Inter] font-semibold text-zinc-950 shadow-sm transition-all duration-150 hover:-translate-y-px hover:bg-zinc-100"
             >
               <span className="shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
@@ -175,7 +176,7 @@ export function WalletModal(): JSX.Element | null {
             <button
               type="button"
               onClick={() => handleFeaturePlaceholder('Apple')}
-              className="group relative flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl border border-white/10 bg-black px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:-translate-y-px hover:bg-zinc-900"
+              className="font-[Inter] group relative flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl border border-white/10 bg-black px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:-translate-y-px hover:bg-zinc-900"
             >
               <svg className="shrink-0" aria-hidden="true" width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -204,7 +205,7 @@ export function WalletModal(): JSX.Element | null {
             <button
               type="button"
               onClick={() => handleFeaturePlaceholder('X')}
-              className="group relative flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl border border-white/10 bg-black px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:-translate-y-px hover:bg-zinc-900"
+              className="font-[Inter] group relative flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl border border-white/10 bg-black px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:-translate-y-px hover:bg-zinc-900"
             >
               <svg className="shrink-0" aria-hidden="true" width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -275,7 +276,7 @@ export function WalletModal(): JSX.Element | null {
             <button
               type="button"
               onClick={() => handleWalletSelect('Phantom')}
-              className="border-[#202227] bg-[#121316] hover:bg-[#181a1f] flex w-full cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-3 transition-all duration-150 hover:-translate-y-px"
+              className="font-[Inter] border-[#202227] bg-[#121316] hover:bg-[#181a1f] flex w-full cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-3 transition-all duration-150 hover:-translate-y-px"
             >
               <img
                 alt="Phantom"
@@ -299,7 +300,7 @@ export function WalletModal(): JSX.Element | null {
             <button
               type="button"
               onClick={() => handleWalletSelect('MetaMask')}
-              className="border-[#202227] bg-[#121316] hover:bg-[#181a1f] flex w-full cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-3 transition-all duration-150 hover:-translate-y-px"
+              className="font-[Inter] border-[#202227] bg-[#121316] hover:bg-[#181a1f] flex w-full cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-3 transition-all duration-150 hover:-translate-y-px"
             >
               <img
                 alt="MetaMask"
@@ -323,7 +324,7 @@ export function WalletModal(): JSX.Element | null {
             <button
               type="button"
               onClick={() => handleWalletSelect('MetaMask')}
-              className="border-[#202227] bg-[#121316] hover:bg-[#181a1f] flex w-full cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-3 transition-all duration-150 hover:-translate-y-px"
+              className="font-[Inter] border-[#202227] bg-[#121316] hover:bg-[#181a1f] flex w-full cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-3 transition-all duration-150 hover:-translate-y-px"
             >
               <img
                 alt="MetaMask"
@@ -346,7 +347,7 @@ export function WalletModal(): JSX.Element | null {
             <button
               type="button"
               onClick={() => setShowAllWallets((prev) => !prev)}
-              className="border-[#202227] bg-[#121316] hover:bg-[#181a1f] flex w-full cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-3 transition-all duration-150 hover:-translate-y-px"
+              className="font-[Inter] border-[#202227] bg-[#121316] hover:bg-[#181a1f] flex w-full cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-3 transition-all duration-150 hover:-translate-y-px"
             >
               <div className="bg-[#1c1e22] border border-[#2d3037] text-text-muted flex h-7 w-7 items-center justify-center rounded-lg">
                 <svg aria-hidden="true" width="16px" height="16px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
