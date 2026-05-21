@@ -95,9 +95,9 @@ export function Sidebar(): JSX.Element {
 
       <aside
         className={cn(
-          "flex flex-col border-r border-border bg-surface/95 backdrop-blur-md h-full",
+          "flex flex-col border-0 border-r border-[#212225] border-opacity-100 bg-[#111113] bg-opacity-100",
           // Mobile: fixed drawer that slides in/out
-          "fixed inset-y-0 left-0 z-50 w-[260px]",
+          "fixed inset-y-0 left-0 z-50 w-[208px]",
           "transform transition-transform duration-200 ease-out",
           mobileOpen ? "translate-x-0" : "-translate-x-full",
           // Desktop: become a normal static flex child, drop the transform,
@@ -116,17 +116,17 @@ export function Sidebar(): JSX.Element {
       >
         <div
           className={cn(
-            "border-b border-border",
+            "h-[64px] flex",
             showCollapsedLayout
               ? "px-2 py-3 flex flex-col items-center gap-2"
-              : "px-4 pt-5 pb-4",
+              : "px-[8px] pb-[8px] pt-[16px] ",
           )}
         >
-          <div className="flex items-center gap-2 w-full">
+          <div className="flex items-center justify-between gap-2 w-full">
             <NavLink
               to="/"
               className={cn(
-                "flex items-center gap-2.5 group min-w-0",
+                "flex items-center gap-2 group min-w-0",
                 showCollapsedLayout && "justify-center w-full",
               )}
               title={showCollapsedLayout ? env.platformName : undefined}
@@ -140,7 +140,7 @@ export function Sidebar(): JSX.Element {
               {!showCollapsedLayout ? (
                 <div className="min-w-0">
                   <svg
-                    class="mt-px"
+                    className="mt-px"
                     fill="none"
                     height="16"
                     viewBox="0 0 73 16"
@@ -203,7 +203,7 @@ export function Sidebar(): JSX.Element {
                 type="button"
                 onClick={toggleDesktop}
                 aria-label="Collapse sidebar"
-                className="ml-auto p-1.5 rounded-md text-text-muted hover:text-text-primary hover:bg-surface-elevated transition-colors hidden lg:inline-flex"
+                className="ml-[10px] mt-[4px] rounded-md text-text-muted hover:text-text-primary hover:bg-surface-elevated transition-colors hidden lg:inline-flex"
               >
                 <PanelLeftClose className="h-4 w-4" />
               </button>
@@ -225,8 +225,8 @@ export function Sidebar(): JSX.Element {
 
         <nav
           className={cn(
-            "flex-1 py-4 flex flex-col gap-1 overflow-y-auto",
-            showCollapsedLayout ? "px-2 items-stretch" : "px-3",
+            "p-4 py-[8px] flex flex-col gap-2 overflow-y-auto",
+            showCollapsedLayout ? " items-stretch" : "",
           )}
         >
           {NAV.map(({ to, label, icon: Icon, end }) => (
@@ -237,25 +237,25 @@ export function Sidebar(): JSX.Element {
               title={showCollapsedLayout ? label : undefined}
               className={({ isActive }) =>
                 cn(
-                  "relative flex items-center rounded-xl text-[14px] font-medium transition-colors",
+                  "relative flex items-center rounded-md text-[14px] font-medium transition-colors",
                   showCollapsedLayout
                     ? "justify-center h-10 w-full"
-                    : "gap-3 px-3 py-2.5",
+                    : "gap-2 p-2",
                      isActive ? "font-medium" : "font-normal",
                   isActive
-                    ? "text-text-[#FAFAFA] bg-surface-elevated"
-                    : "text-text-[#FAFAFA] hover:text-text-primary hover:bg-surface-elevated/60",
+                    ? "text-text-[#FAFAFA] bg-[#18191B]"
+                    : "text-text-[#FAFAFA]  hover:bg-[#18191B]",
                 )
               }
             >
               {({ isActive }) => (
                 <>
-                  {isActive && !showCollapsedLayout ? (
+                  {/* {isActive && !showCollapsedLayout ? (
                     <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-primary" />
                   ) : null}
                   {isActive && showCollapsedLayout ? (
                     <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-r-full bg-primary" />
-                  ) : null}
+                  ) : null} */}
                   <Icon className="h-4 w-4 shrink-0" />
                   {!showCollapsedLayout ? label : null}
                 </>
@@ -266,8 +266,8 @@ export function Sidebar(): JSX.Element {
 
         <div
           className={cn(
-            "flex flex-col gap-2 border-t border-border",
-            showCollapsedLayout ? "p-2" : "p-3",
+            "flex flex-col gap-[12px]",
+            showCollapsedLayout ? "p-2" : "p-[8px] pt-[12px]",
           )}
         >
           <NavLink
@@ -278,7 +278,7 @@ export function Sidebar(): JSX.Element {
               <span
                 className={cn(
                   "flex items-center justify-center h-10 w-full rounded-xl",
-                  "bg-primary text-background hover:bg-primary-600 transition-colors",
+                  "bg-[#86EFAC] text-background hover:bg-[#86EFAC] transition-colors",
                 )}
               >
                 <Plus className="h-4 w-4" />

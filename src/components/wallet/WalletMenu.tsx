@@ -8,7 +8,7 @@ import {
   ExternalLink,
   LogOut,
   User,
-  Wallet,
+  // Wallet,
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useWallet } from '@solana/wallet-adapter-react';

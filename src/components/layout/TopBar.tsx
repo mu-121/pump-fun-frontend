@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Bell, Menu, Mic, Plus, Search, X } from 'lucide-react';
+import {  Menu, Mic, Plus, Search, X } from 'lucide-react';
 import { env } from '@/lib/env';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/Button';
+// import { Button } from '@/components/ui/Button';
 import { WalletMenu } from '@/components/wallet/WalletMenu';
 import { useUiStore } from '@/stores/uiStore';
 
