@@ -26,36 +26,28 @@ import { Modal } from "@/components/ui/Modal";
 import { useTokens } from "@/hooks/useTokens";
 import type { Token } from "@/types/token";
 import toast from "react-hot-toast";
-import TerminaliconPath from "../../../public/Images/Sidedrawer/terminal.svg";
-import Supporticon from "../../../public/Images/Sidedrawer/support.svg";
-import Liveicon from "../../../public/Images/Sidedrawer/live.svg";
-import Callout from "../../../public/Images/Sidedrawer/callout.svg";
-import Home from "../../../public/Images/Sidedrawer/home.svg";
-import Homefill from "../../../public/Images/Sidedrawer/homefill.svg";
-import Livefill from "../../../public/Images/Sidedrawer/livefill.svg";
-import Calloutfill from "../../../public/Images/Sidedrawer/calloutfill.svg";
 
 const NAV = [
-  { to: "/", label: "Home", icon: Home, isImage: true, end: true },
+  { to: "/", label: "Home", icon: "/Images/Sidedrawer/home.svg", isImage: true, end: true },
   {
     to: "/callouts",
     label: "Callouts",
-    icon: Callout,
+    icon: "/Images/Sidedrawer/callout.svg",
     isImage: true,
     end: false,
   },
-  { to: "/live", label: "Live", icon: Liveicon, isImage: true, end: false },
+  { to: "/live", label: "Live", icon: "/Images/Sidedrawer/live.svg", isImage: true, end: false },
   {
     to: "/support",
     label: "Support",
-    icon: Supporticon,
+    icon: "/Images/Sidedrawer/support.svg",
     isImage: true,
     end: false,
   },
   {
     to: "/terminal",
     label: "Terminal",
-    icon: TerminaliconPath,
+    icon: "/Images/Sidedrawer/terminal.svg",
     isImage: true,
     end: false,
   },
@@ -111,7 +103,7 @@ export function Sidebar(): JSX.Element {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedToken, setSelectedToken] = useState<Token | null>(null);
   const [calloutNote, setCalloutNote] = useState("");
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const tokensQuery = useTokens({
     sort: "trending",
     search: searchQuery || undefined,
@@ -319,24 +311,29 @@ const navigate = useNavigate();
 
         <nav
           className={cn(
-            "p-4 pt-[8px] pb-0 flex flex-col  gap-2 overflow-y-auto",
+            "p-4 pt-[8px] pb-0 flex flex-col  gap-2",
             showCollapsedLayout ? " items-stretch" : "",
           )}
         >
           {NAV.map(({ to, label, icon: Icon, isImage, end }) => (
             <NavLink
               key={to}
-              to={label === "Live" || label === "Support" ? "#" : to}
+              to={label === "Live" || label === "Support" || label === "Terminal" ? "#" : to}
               end={end}
               onClick={(e) => {
                 if (label === "Callouts") {
                   e.preventDefault();
-                  navigate('/callouts')
+                  navigate("/callouts");
                 }
                 if (label === "Live") {
                   e.preventDefault();
                   e.stopPropagation();
-                  setGoLiveModalOpen(true);
+                  window.location.href = "https://pump.fun/live";
+                }
+                if (label === "Terminal") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.open("https://trade.padre.gg/sign-in", "_blank", "noopener,noreferrer");
                 }
                 if (label === "Support") {
                   e.preventDefault();
@@ -351,8 +348,8 @@ const navigate = useNavigate();
                   showCollapsedLayout
                     ? "justify-center h-[40px] w-[40px]"
                     : "gap-2 p-2",
-                  isActive ? "font-medium" : "font-normal",
-                  isActive
+                  isActive && label !== "Live" && label !== "Terminal" ? "font-medium" : "font-normal",
+                  isActive && label !== "Live" && label !== "Terminal"
                     ? "text-text-[#FAFAFA] bg-[#18191B]"
                     : "text-text-[#FAFAFA]  hover:bg-[#18191B]",
                 )
@@ -370,11 +367,11 @@ const navigate = useNavigate();
                     <img
                       src={
                         isActive && label === "Home"
-                          ? Homefill
+                          ? "/Images/Sidedrawer/homefill.svg"
                           : isActive && label === "Live"
-                            ? Livefill
+                            ? "/Images/Sidedrawer/livefill.svg"
                             : isActive && label === "Callouts"
-                              ? Calloutfill
+                              ? "/Images/Sidedrawer/calloutfill.svg"
                               : Icon
                       }
                       alt={label}
@@ -407,7 +404,7 @@ const navigate = useNavigate();
 
         <div
           className={cn(
-            "flex flex-col  gap-[12px]",
+            "flex flex-col  gap-[12px] justify-between h-full",
             showCollapsedLayout ? "p-2 items-center" : "p-[8px] pt-[12px]",
           )}
         >
@@ -461,7 +458,10 @@ const navigate = useNavigate();
                   }}
                   className="flex items-center font-medium cursor-pointer gap-[8px] py-[0px] px-[12px] h-[40px] text-[14px] font-[Inter] leading-[1.25rem] text-[white] hover:bg-[#212225] hover:bg-opacity-100 transition-colors w-full text-left rounded-[6px]"
                 >
-                  <img src="../../../public/Images/Sidedrawer/callout.svg" className="text-[white] h-[24px]" />
+                  <img
+                    src="../../../public/Images/Sidedrawer/callout.svg"
+                    className="text-[white] h-[24px]"
+                  />
                   <span>Callout</span>
                 </NavLink>
                 <NavLink
@@ -510,7 +510,6 @@ const navigate = useNavigate();
               }
             }}
           >
-            {/* <Smartphone className="h-4 w-4" /> */}
             <img src="/Images/Sidedrawer/tryapp.svg" />
             {!showCollapsedLayout ? (
               <span className="font-[Inter]">Try app</span>
@@ -797,9 +796,10 @@ const navigate = useNavigate();
               </button>
               <button
                 variant="primary"
-                onClick={() => {setGoLiveModalOpen(false);
-                    navigate("/create", );}
-                }
+                onClick={() => {
+                  setGoLiveModalOpen(false);
+                  navigate("/create");
+                }}
                 className="leading-[1.5rem] font-[Inter] font-semibold text-[14px] px-[14px] h-[40px] bg-[#86EFAC] text-[#052e16] rounded-[12px]"
               >
                 Create coin
@@ -844,33 +844,39 @@ const navigate = useNavigate();
 
 /* ─── Helpers for watchlist panel ──────────────────────────── */
 function getWatchlistIds(): string[] {
-  try { return JSON.parse(localStorage.getItem('pump_watchlist') || '[]'); }
-  catch { return []; }
+  try {
+    return JSON.parse(localStorage.getItem("pump_watchlist") || "[]");
+  } catch {
+    return [];
+  }
 }
 
 function getListsForDrawer(): string[] {
-  try { return JSON.parse(localStorage.getItem('pump_lists') || '["Watchlist"]'); }
-  catch { return ['Watchlist']; }
+  try {
+    return JSON.parse(localStorage.getItem("pump_lists") || '["Watchlist"]');
+  } catch {
+    return ["Watchlist"];
+  }
 }
 
 /* ─── Manage Lists Modal (shared, portal-based) ─────────────── */
 function DrawerManageListsModal({ onClose }: { onClose: () => void }) {
   const [lists, setLists] = useState<string[]>(getListsForDrawer);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState("");
   const [editingIdx, setEditingIdx] = useState<number | null>(null);
-  const [editVal, setEditVal] = useState('');
+  const [editVal, setEditVal] = useState("");
   const [confirmIdx, setConfirmIdx] = useState<number | null>(null);
 
   const save = (updated: string[]) => {
     setLists(updated);
-    localStorage.setItem('pump_lists', JSON.stringify(updated));
+    localStorage.setItem("pump_lists", JSON.stringify(updated));
   };
 
   const handleCreate = () => {
     const name = input.trim();
     if (!name || lists.includes(name)) return;
     save([...lists, name]);
-    setInput('');
+    setInput("");
   };
 
   const handleRename = (idx: number, next: string) => {
@@ -886,14 +892,27 @@ function DrawerManageListsModal({ onClose }: { onClose: () => void }) {
 
   return createPortal(
     <div className="fixed inset-0 z-[9998] flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative z-10 w-full max-w-md mx-4 rounded-[22px] bg-slate-950 border border-slate-800/60 p-6 text-white shadow-2xl" style={{ fontFamily: "'Inter', sans-serif" }}>
-        <button onClick={onClose} className="absolute right-4 top-4 rounded p-1 transition-colors hover:bg-slate-800">
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      <div
+        className="relative z-10 w-full max-w-md mx-4 rounded-[22px] bg-slate-950 border border-slate-800/60 p-6 text-white shadow-2xl"
+        style={{ fontFamily: "'Inter', sans-serif" }}
+      >
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-4 rounded p-1 transition-colors hover:bg-slate-800"
+        >
           <X className="h-4 w-4 text-gray-400" />
         </button>
         <div className="mb-5">
-          <h2 className="text-[18px] font-semibold text-gray-200 mb-1">Manage lists</h2>
-          <p className="text-[14px] text-gray-400">Create new lists or manage your existing lists here</p>
+          <h2 className="text-[18px] font-semibold text-gray-200 mb-1">
+            Manage lists
+          </h2>
+          <p className="text-[14px] text-gray-400">
+            Create new lists or manage your existing lists here
+          </p>
         </div>
         <div className="space-y-4">
           <div className="flex gap-2">
@@ -901,8 +920,8 @@ function DrawerManageListsModal({ onClose }: { onClose: () => void }) {
               className="flex-1 h-10 rounded-md border border-slate-700 bg-transparent px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-slate-400"
               placeholder="Add new list..."
               value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleCreate()}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleCreate()}
             />
             <button
               onClick={handleCreate}
@@ -913,46 +932,140 @@ function DrawerManageListsModal({ onClose }: { onClose: () => void }) {
             </button>
           </div>
           <div className="max-h-[300px] space-y-1 overflow-y-auto py-1">
-            {lists.map((list, idx) => (
+            {lists.map((list, idx) =>
               confirmIdx === idx ? (
-                <div key={list + idx} className="flex h-10 items-center gap-3 rounded px-2">
-                  <span className="text-sm text-red-400 font-medium flex-1">Are you sure?</span>
-                  <button onClick={() => handleDelete(idx)} className="h-7 px-3 bg-red-500 hover:bg-red-600 text-white text-xs font-semibold rounded transition-colors">Yes</button>
-                  <button onClick={() => setConfirmIdx(null)} className="text-sm text-gray-400 hover:text-white transition-colors">No, cancel</button>
+                <div
+                  key={list + idx}
+                  className="flex h-10 items-center gap-3 rounded px-2"
+                >
+                  <span className="text-sm text-red-400 font-medium flex-1">
+                    Are you sure?
+                  </span>
+                  <button
+                    onClick={() => handleDelete(idx)}
+                    className="h-7 px-3 bg-red-500 hover:bg-red-600 text-white text-xs font-semibold rounded transition-colors"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onClick={() => setConfirmIdx(null)}
+                    className="text-sm text-gray-400 hover:text-white transition-colors"
+                  >
+                    No, cancel
+                  </button>
                 </div>
               ) : editingIdx === idx ? (
-                <div key={list + idx} className="flex h-10 items-center gap-2 rounded px-2 bg-slate-800">
+                <div
+                  key={list + idx}
+                  className="flex h-10 items-center gap-2 rounded px-2 bg-slate-800"
+                >
                   <input
                     autoFocus
                     className="flex-1 bg-transparent text-sm text-white focus:outline-none"
                     value={editVal}
-                    onChange={e => setEditVal(e.target.value)}
-                    onKeyDown={e => {
-                      if (e.key === 'Enter') { const v = editVal.trim(); if (v && v !== list) handleRename(idx, v); else setEditingIdx(null); }
-                      if (e.key === 'Escape') setEditingIdx(null);
+                    onChange={(e) => setEditVal(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        const v = editVal.trim();
+                        if (v && v !== list) handleRename(idx, v);
+                        else setEditingIdx(null);
+                      }
+                      if (e.key === "Escape") setEditingIdx(null);
                     }}
                   />
-                  <button onClick={() => { const v = editVal.trim(); if (v && v !== list) handleRename(idx, v); else setEditingIdx(null); }} className="text-[#86EFAC] hover:text-white transition-colors p-0.5">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><polyline points="20 6 9 17 4 12" /></svg>
+                  <button
+                    onClick={() => {
+                      const v = editVal.trim();
+                      if (v && v !== list) handleRename(idx, v);
+                      else setEditingIdx(null);
+                    }}
+                    className="text-[#86EFAC] hover:text-white transition-colors p-0.5"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="h-4 w-4"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
                   </button>
-                  <button onClick={() => setEditingIdx(null)} className="text-gray-400 hover:text-red-400 transition-colors p-0.5">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                  <button
+                    onClick={() => setEditingIdx(null)}
+                    className="text-gray-400 hover:text-red-400 transition-colors p-0.5"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="h-4 w-4"
+                    >
+                      <path d="M18 6 6 18" />
+                      <path d="m6 6 12 12" />
+                    </svg>
                   </button>
                 </div>
               ) : (
-                <div key={list + idx} className="group flex h-10 items-center gap-2 rounded px-2 hover:bg-slate-800 transition-colors">
+                <div
+                  key={list + idx}
+                  className="group flex h-10 items-center gap-2 rounded px-2 hover:bg-slate-800 transition-colors"
+                >
                   <span className="flex-1 text-sm text-white">{list}</span>
-                  <button onClick={() => { setEditVal(list); setEditingIdx(idx); }} className="opacity-0 group-hover:opacity-100 transition-opacity p-1 text-gray-400 hover:text-white rounded" title="Rename">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+                  <button
+                    onClick={() => {
+                      setEditVal(list);
+                      setEditingIdx(idx);
+                    }}
+                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1 text-gray-400 hover:text-white rounded"
+                    title="Rename"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="h-3.5 w-3.5"
+                    >
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                    </svg>
                   </button>
-                  <button onClick={() => setConfirmIdx(idx)} className="opacity-0 group-hover:opacity-100 transition-opacity p-1 text-gray-400 hover:text-red-500 rounded" title="Delete">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6" /><path d="M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg>
+                  <button
+                    onClick={() => setConfirmIdx(idx)}
+                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1 text-gray-400 hover:text-red-500 rounded"
+                    title="Delete"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="h-3.5 w-3.5"
+                    >
+                      <polyline points="3 6 5 6 21 6" />
+                      <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+                      <path d="M10 11v6" />
+                      <path d="M14 11v6" />
+                      <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
+                    </svg>
                   </button>
                 </div>
-              )
-            ))}
+              ),
+            )}
             {lists.length === 0 && (
-              <p className="flex h-7 flex-1 items-center px-1 py-0 font-[Inter] text-[#fff] text-[14px]">Watchlist</p>
+              <p className="flex h-7 flex-1 items-center px-1 py-0 font-[Inter] text-[#fff] text-[14px]">
+                Watchlist
+              </p>
             )}
           </div>
         </div>
@@ -965,7 +1078,7 @@ function DrawerManageListsModal({ onClose }: { onClose: () => void }) {
 /* ─── Holdings / Watchlist Drawer ───────────────────────────── */
 function HoldingsDrawer(): JSX.Element {
   const [open, setOpen] = useState(true);
-  const [view, setView] = useState<'Holdings' | 'Watchlist'>('Watchlist');
+  const [view, setView] = useState<"Holdings" | "Watchlist">("Watchlist");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [showManageModal, setShowManageModal] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -974,7 +1087,9 @@ function HoldingsDrawer(): JSX.Element {
   const sol = useSolBalance();
 
   // Mock watchlist tokens using IDs from localStorage (display placeholder data)
-  const [watchlistIds, setWatchlistIds] = useState<string[]>(() => getWatchlistIds());
+  const [watchlistIds, setWatchlistIds] = useState<string[]>(() =>
+    getWatchlistIds(),
+  );
 
   // Refresh watchlist when dropdown closes
   useEffect(() => {
@@ -985,28 +1100,54 @@ function HoldingsDrawer(): JSX.Element {
   useEffect(() => {
     if (!dropdownOpen) return;
     const handler = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setDropdownOpen(false);
       }
     };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, [dropdownOpen]);
 
   // Sample watchlist items for display (static demo tokens)
   const sampleWatchlistTokens = [
-    { id: '1', name: 'The Wandering Walrus', symbol: 'WALRUS', value: '$2.40K', change: null, img: 'https://pump.mypinata.cloud/ipfs/QmXWUkymk8K2d8ry1D22ycRrW84Bk5H8R3dAgfyJLbCJbN' },
-    { id: '2', name: '1000x', symbol: '1000X', value: '$71.3K', change: -5, img: 'https://pump.mypinata.cloud/ipfs/bafkreigoan5x7rvedravjqlaz2aemyzkgjwhvao57roasf7l4ds4mblh4i' },
-    { id: '3', name: 'Neuralink', symbol: 'NL', value: '$2.40K', change: null, img: 'https://pump.mypinata.cloud/ipfs/bafkreic755khegsq74hpfluzp2bgacz4bcprr6wxl2g36pvc6kdcrj222e' },
+    {
+      id: "1",
+      name: "The Wandering Walrus",
+      symbol: "WALRUS",
+      value: "$2.40K",
+      change: null,
+      img: "https://pump.mypinata.cloud/ipfs/QmXWUkymk8K2d8ry1D22ycRrW84Bk5H8R3dAgfyJLbCJbN",
+    },
+    {
+      id: "2",
+      name: "1000x",
+      symbol: "1000X",
+      value: "$71.3K",
+      change: -5,
+      img: "https://pump.mypinata.cloud/ipfs/bafkreigoan5x7rvedravjqlaz2aemyzkgjwhvao57roasf7l4ds4mblh4i",
+    },
+    {
+      id: "3",
+      name: "Neuralink",
+      symbol: "NL",
+      value: "$2.40K",
+      change: null,
+      img: "https://pump.mypinata.cloud/ipfs/bafkreic755khegsq74hpfluzp2bgacz4bcprr6wxl2g36pvc6kdcrj222e",
+    },
   ];
 
   return (
     <>
-      {showManageModal && <DrawerManageListsModal onClose={() => setShowManageModal(false)} />}
+      {showManageModal && (
+        <DrawerManageListsModal onClose={() => setShowManageModal(false)} />
+      )}
 
       <div
         className="flex flex-col bg-bg-primary transition-all flex-grow"
-        style={{ borderTop: '1px solid rgba(248, 250, 252, 0.1)' }}
+        style={{ borderTop: "1px solid rgba(248, 250, 252, 0.1)" }}
       >
         {/* Header row */}
         <div className="py-2 px-4" style={{ zIndex: 2 }}>
@@ -1016,19 +1157,29 @@ function HoldingsDrawer(): JSX.Element {
               <div className="relative" ref={dropdownRef}>
                 <button
                   type="button"
-                  onClick={() => setDropdownOpen(prev => !prev)}
+                  onClick={() => setDropdownOpen((prev) => !prev)}
                   className="group/trigger -m-2 flex cursor-pointer items-center p-2 min-w-[80px]"
                 >
                   <span className="ml-[2px] cursor-pointer truncate text-sm text-gray-200 transition-colors hover:text-white">
                     {view}
                   </span>
                   <svg
-                    stroke="currentColor" fill="currentColor" strokeWidth="0"
-                    viewBox="0 0 20 20" aria-hidden="true"
-                    className={cn("ml-1 inline h-4 w-4 text-gray-400 transition-all duration-300 hover:text-white", dropdownOpen && "rotate-180")}
+                    stroke="currentColor"
+                    fill="currentColor"
+                    strokeWidth="0"
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                    className={cn(
+                      "ml-1 inline h-4 w-4 text-gray-400 transition-all duration-300 hover:text-white",
+                      dropdownOpen && "rotate-180",
+                    )}
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </button>
 
@@ -1036,16 +1187,29 @@ function HoldingsDrawer(): JSX.Element {
                 {dropdownOpen && (
                   <div className="absolute bottom-full left-0 mb-1 z-50 w-[212px] rounded-[8px] border border-[#2A2B30] bg-[#18191B] shadow-2xl overflow-hidden py-0.5">
                     <div className="max-h-[199px] overflow-y-auto">
-                      {(['Holdings', 'Watchlist'] as const).map(option => (
+                      {(["Holdings", "Watchlist"] as const).map((option) => (
                         <button
                           key={option}
                           type="button"
-                          onClick={() => { setView(option); setDropdownOpen(false); }}
+                          onClick={() => {
+                            setView(option);
+                            setDropdownOpen(false);
+                          }}
                           className="group flex w-full items-center gap-2 px-3 py-2 transition-colors hover:bg-[#3f414b] focus-visible:outline-none"
                         >
-                          <span className="w-full max-w-[160px] truncate text-left text-sm text-white">{option}</span>
+                          <span className="w-full max-w-[160px] truncate text-left text-sm text-white">
+                            {option}
+                          </span>
                           {view === option && (
-                            <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 min-w-4 text-white ml-auto">
+                            <svg
+                              stroke="currentColor"
+                              fill="none"
+                              strokeWidth="2"
+                              viewBox="0 0 24 24"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="h-4 w-4 min-w-4 text-white ml-auto"
+                            >
                               <polyline points="20 6 9 17 4 12" />
                             </svg>
                           )}
@@ -1055,11 +1219,22 @@ function HoldingsDrawer(): JSX.Element {
                     <div className="border-t border-slate-800">
                       <button
                         type="button"
-                        onClick={() => { setDropdownOpen(false); setShowManageModal(true); }}
+                        onClick={() => {
+                          setDropdownOpen(false);
+                          setShowManageModal(true);
+                        }}
                         className="flex w-full items-center gap-2 px-3 py-2 text-sm text-white transition-colors hover:bg-[#3f414b] focus-visible:outline-none"
                       >
                         {/* Gear icon */}
-                        <svg stroke="currentColor" fill="none" strokeWidth="2" viewBox="0 0 24 24" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-white">
+                        <svg
+                          stroke="currentColor"
+                          fill="none"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="h-4 w-4 text-white"
+                        >
                           <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
                           <circle cx="12" cy="12" r="3" />
                         </svg>
@@ -1074,17 +1249,27 @@ function HoldingsDrawer(): JSX.Element {
             {/* Right: double-chevron collapse/expand */}
             <button
               type="button"
-              onClick={() => setOpen(v => !v)}
+              onClick={() => setOpen((v) => !v)}
               className="group/expand -m-2 flex items-center justify-center p-2"
-              title={open ? 'Collapse' : 'Expand'}
+              title={open ? "Collapse" : "Expand"}
             >
               <svg
-                stroke="currentColor" fill="currentColor" strokeWidth="0"
-                viewBox="0 0 20 20" aria-hidden="true"
-                className={cn("h-4 w-4 text-gray-400 transition-all duration-300 hover:text-white", open && "rotate-180")}
+                stroke="currentColor"
+                fill="currentColor"
+                strokeWidth="0"
+                viewBox="0 0 20 20"
+                aria-hidden="true"
+                className={cn(
+                  "h-4 w-4 text-gray-400 transition-all duration-300 hover:text-white",
+                  open && "rotate-180",
+                )}
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path fillRule="evenodd" d="M4.293 15.707a1 1 0 010-1.414l5-5a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414 0zm0-6a1 1 0 010-1.414l5-5a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L10 5.414 5.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                <path
+                  fillRule="evenodd"
+                  d="M4.293 15.707a1 1 0 010-1.414l5-5a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414 0zm0-6a1 1 0 010-1.414l5-5a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L10 5.414 5.707 9.707a1 1 0 01-1.414 0z"
+                  clipRule="evenodd"
+                />
               </svg>
             </button>
           </div>
@@ -1092,11 +1277,14 @@ function HoldingsDrawer(): JSX.Element {
 
         {/* Body — collapses/expands */}
         {open && (
-          <div className="custom-scrollbar max-h-[300px] overflow-y-auto" style={{ height: 'auto', opacity: 1 }}>
+          <div
+            className="custom-scrollbar max-h-[300px] overflow-y-auto"
+            style={{ height: "auto", opacity: 1 }}
+          >
             <div className="scrollbar-hide flex flex-col overflow-y-auto transition-[height] duration-300 ease-in">
-              {view === 'Watchlist' ? (
+              {view === "Watchlist" ? (
                 <div className="flex flex-col">
-                  {sampleWatchlistTokens.map(token => (
+                  {sampleWatchlistTokens.map((token) => (
                     <a
                       key={token.id}
                       className="cursor-pointer hover:bg-[#18191B] flex-col items-center px-4 pt-2 pb-1.5"
@@ -1109,25 +1297,44 @@ function HoldingsDrawer(): JSX.Element {
                               alt={token.name}
                               className="h-full w-full object-cover"
                               src={token.img}
-                              onError={e => { (e.target as HTMLImageElement).src = ''; }}
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = "";
+                              }}
                             />
                           </div>
-                          <span className="truncate font-bold text-gray-200 max-w-[120px] text-xs">{token.name}</span>
+                          <span className="truncate font-bold text-gray-200 max-w-[120px] text-xs">
+                            {token.name}
+                          </span>
                         </div>
                         <div className="flex flex-col items-end ml-2">
-                          <span className="shrink-0 text-xs text-gray-200">{token.value}</span>
+                          <span className="shrink-0 text-xs text-gray-200">
+                            {token.value}
+                          </span>
                         </div>
                       </div>
                       {token.change != null && (
                         <div className="flex w-full items-center justify-end text-xs font-[12px]">
-                          <span className={cn("text-xs font-semibold", token.change < 0 ? "text-red-500" : "text-green-400")}>
-                            {token.change > 0 ? '+' : ''}{token.change}%
+                          <span
+                            className={cn(
+                              "text-xs font-semibold",
+                              token.change < 0
+                                ? "text-red-500"
+                                : "text-green-400",
+                            )}
+                          >
+                            {token.change > 0 ? "+" : ""}
+                            {token.change}%
                           </span>
                         </div>
                       )}
                     </a>
                   ))}
-                  <button className="flex h-5 w-full items-center justify-center bg-bg-primary px-4 text-xs text-gray-300 hover:bg-[#18191B]">
+                  <button
+                    onClick={() => {
+                      window.location.href = "https://pump.fun/?feed=watchlist";
+                    }}
+                    className="flex h-5 w-full items-center justify-center bg-bg-primary px-4 text-xs text-gray-300 hover:bg-[#18191B]"
+                  >
                     See more
                   </button>
                 </div>
@@ -1135,21 +1342,34 @@ function HoldingsDrawer(): JSX.Element {
                 /* Holdings view */
                 <div className="flex flex-col px-4 pt-2 pb-3 gap-2">
                   {!publicKey ? (
-                    <p className="text-xs text-gray-400">Connect a wallet to see holdings.</p>
+                    <p className="text-xs text-gray-400">
+                      Connect a wallet to see holdings.
+                    </p>
                   ) : (
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className="h-5 w-5 flex-shrink-0 overflow-hidden rounded-full bg-[#9945FF] flex items-center justify-center">
-                          <span className="text-[8px] font-bold text-white">◎</span>
+                          <span className="text-[8px] font-bold text-white">
+                            ◎
+                          </span>
                         </div>
-                        <span className="text-xs font-bold text-gray-200">SOL</span>
+                        <span className="text-xs font-bold text-gray-200">
+                          SOL
+                        </span>
                       </div>
                       <span className="text-xs text-gray-200 font-mono">
-                        {sol.lamports == null ? '—' : formatSol(sol.lamports, { withUnit: false, fractionDigits: 4 })}
+                        {sol.lamports == null
+                          ? "—"
+                          : formatSol(sol.lamports, {
+                              withUnit: false,
+                              fractionDigits: 4,
+                            })}
                       </span>
                     </div>
                   )}
-                  <p className="text-[11px] text-gray-500">Tokens are listed on your profile.</p>
+                  <p className="text-[11px] text-gray-500">
+                    Tokens are listed on your profile.
+                  </p>
                 </div>
               )}
             </div>
