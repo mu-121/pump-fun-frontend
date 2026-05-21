@@ -454,6 +454,9 @@ export function Sidebar(): JSX.Element {
                     if (!showCollapsedLayout) {
                       setCreateMenuOpen(false);
                       setCalloutModalOpen(true);
+                    } else {
+                      setCreateMenuOpen(false);
+                      navigate("/callouts");
                     }
                   }}
                   className="flex items-center font-medium cursor-pointer gap-[8px] py-[0px] px-[12px] h-[40px] text-[14px] font-[Inter] leading-[1.25rem] text-[white] hover:bg-[#212225] hover:bg-opacity-100 transition-colors w-full text-left rounded-[6px]"
@@ -530,13 +533,13 @@ export function Sidebar(): JSX.Element {
             setSelectedToken(null);
             setCalloutNote("");
           }}
-          className="max-w-[480px] w-full bg-[#111113] border border-[#212225] overflow-hidden p-0 shadow-2xl"
+          className="max-w-[558px] w-full bg-[#111113] border border-[#212225] overflow-hidden p-0 shadow-2xl"
         >
           {!selectedToken ? (
             /* Pane 1: Search Coin */
             <>
               {/* Custom Header */}
-              <div className="bg-[#0B150F] border-b border-[#212225] p-5 relative">
+              <div className="bg-[#111113] border-b border-[#212225] pb-5 relative">
                 <button
                   type="button"
                   onClick={() => {
@@ -545,25 +548,25 @@ export function Sidebar(): JSX.Element {
                     setSelectedToken(null);
                     setCalloutNote("");
                   }}
-                  className="absolute top-4 right-4 p-1 rounded-md text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#18191B] transition-colors"
+                  className="absolute top-[-4px] right-4 p-1 rounded-lg text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#18191B] transition-colors"
                   aria-label="Close modal"
                 >
                   <X className="h-4 w-4" />
                 </button>
 
                 <div className="flex gap-4">
-                  <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-[#22C55E]/15 shrink-0">
-                    <Megaphone className="h-5 w-5 text-[#22C55E]" />
+                  <div style={{ backgroundColor: 'rgba(132, 239, 172, 0.9)',   boxShadow: '0 6px 24px -10px rgba(132, 239, 172, 0.55)' }} className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-green/90 via-primary-green/70 to-primary-green/40 text-black shadow-[0_6px_24px_-10px_rgba(132,239,172,0.55)]">
+                    <img src="/Images/Sidedrawer/calloutmodel.svg" className="h-5 w-5 text-[#22C55E]" />
                   </div>
 
                   <div className="flex flex-col">
-                    <span className="text-[10px] font-bold text-[#22C55E] tracking-wider uppercase font-[Inter]">
+                    <span className="text-[10px] font-medium text-[#A1A1AA] tracking-wider uppercase font-[Inter]">
                       New Callout
                     </span>
-                    <h2 className="text-lg font-bold text-[#FAFAFA] mt-0.5 font-[Inter]">
+                    <h2 className="text-[16px] font-semibold text-[#FAFAFA] mt-0.5 font-[Inter]">
                       Make a public bullish call
                     </h2>
-                    <p className="text-xs text-[#A1A1AA] mt-1.5 leading-normal font-[Inter]">
+                    <p className="text-[12px] text-[#A1A1AA] mt-1.5 leading-[1.625rem] font-[Inter]">
                       Pin your call to the current market cap. We'll track the
                       multiple forward so your conviction is on record.
                     </p>
@@ -572,7 +575,7 @@ export function Sidebar(): JSX.Element {
               </div>
 
               {/* Custom Body */}
-              <div className="p-5 flex flex-col gap-4">
+              <div className="p-5 pt-[16px] px-0 flex flex-col gap-4">
                 <div className="relative flex items-center">
                   <Search className="absolute left-3.5 h-4 w-4 text-[#A1A1AA] pointer-events-none" />
                   <input
@@ -589,8 +592,8 @@ export function Sidebar(): JSX.Element {
                 </div>
 
                 {!searchQuery ? (
-                  <div className="flex flex-col items-center justify-center py-20">
-                    <span className="text-sm text-[#A1A1AA] font-[Inter]">
+                  <div className="flex flex-col items-center justify-center pb-[80px]">
+                    <span className="text-[14px] text-[#A1A1AA] font-[Inter]">
                       Start typing to find a coin.
                     </span>
                   </div>
