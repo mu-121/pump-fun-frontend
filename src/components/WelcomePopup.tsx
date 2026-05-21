@@ -65,11 +65,11 @@ export function WelcomePopup(): JSX.Element | null {
         <div className="px-0 pt-6 pb-0">
           <h1
             id="welcome-title"
-            className="font-bold leading-[134%] text-[24px] text-[#FAFAFA!important] text-center"
+            className="font-bold font-[Inter] leading-[134%] text-[24px] text-[#FAFAFA!important] text-center"
           >
             Welcome to {env.platformName}!
           </h1>
-          <p className="mt-4 mb-[4px] font-[Inter!important] text-[16px] text-[#A1A1AA] text-text-muted text-center leading-relaxed">
+          <p className="mt-4 mb-[4px] leading-[150%] font-[Inter!important] text-[16px] text-[#A1A1AA] text-text-muted text-center leading-relaxed">
             {/* {env.platformName}  */}
            Pump lets anyone create coins, giving everyone equal access to buy and sell from the start. Prices can move quickly, so trade carefully.
           </p>
@@ -84,7 +84,7 @@ export function WelcomePopup(): JSX.Element | null {
             Continue
           </Button>
 
-          <p className='mt-4 text-[#A1A1AA] text-xs text-text-tertiary mx-auto max-w-[480px] text-center'>
+          <p className='mt-4 text-[#A1A1AA] font-[Inter!important] text-xs text-text-tertiary mx-auto max-w-[480px] text-center'>
             By clicking this button, you agree to the{' '}
             <Link to="/legal/terms" className="underline hover:text-text-primary">
               Terms and Conditions
