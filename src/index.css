@@ -132,54 +132,11 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
-
-  .to-bg-secondary {
-    --tw-gradient-to: #18191b var(--tw-gradient-to-position, );
-  }
-
-  .via-bg-primary {
-    --tw-gradient-to: #11111300 var(--tw-gradient-to-position, );
-    --tw-gradient-stops: var(--tw-gradient-from), #111113 var(--tw-gradient-via-position, ), var(--tw-gradient-to);
-  }
-
-  .from-bg-secondary {
-    --tw-gradient-from: #18191b var(--tw-gradient-from-position, );
-    --tw-gradient-to: #18191b00 var(--tw-gradient-to-position, );
-    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-  }
-
-  .border-white\/10 {
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .bg-primary-green\/10 {
-    background-color: #84efac1a;
-  }
-
-  .bg-primary-green\/15 {
-    background-color: #84efac26;
-  }
-
-  .border-primary-green\/30 {
-    border-color: #84efac4d;
-  }
-
-  .hover\:border-primary-green\/60:hover {
-    border-color: #84efac99;
-  }
-
-  .text-primary-green {
-    --tw-text-opacity: 1;
-    color: rgb(132 239 172 / var(--tw-text-opacity, 1));
-  }
-
-  .text-text-primary {
-    --tw-text-opacity: 1;
-    color: rgb(250 250 250 / var(--tw-text-opacity, 1));
-  }
-
-  .text-text-tertiary {
-    --tw-text-opacity: 1;
-    color: rgb(161 161 170 / var(--tw-text-opacity, 1));
-  }
+}
+.box-unset{
+  box-sizing: unset;
+}
+/* Green filter for active icons */
+.icon-active-green {
+  filter: brightness(0) saturate(100%) invert(92%) sepia(31%) saturate(766%) hue-rotate(69deg) brightness(104%) contrast(96%);
 }
