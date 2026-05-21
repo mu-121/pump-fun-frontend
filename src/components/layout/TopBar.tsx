@@ -5,6 +5,7 @@ import { env } from '@/lib/env';
 import { cn } from '@/lib/utils';
 // import { Button } from '@/components/ui/Button';
 import { WalletMenu } from '@/components/wallet/WalletMenu';
+import { BalanceMenu } from '@/components/wallet/BalanceMenu';
 import { useUiStore } from '@/stores/uiStore';
 
 const PROMO_KEY = 'pump-clone-promo-dismissed';
@@ -159,6 +160,9 @@ export function TopBar(): JSX.Element {
                 <Plus className="h-5 w-5" aria-hidden />
               </button>
             </Link>
+
+            {/* Balance Dropdown */}
+            <BalanceMenu />
 
             {/* Wallet / sign-in */}
             <WalletMenu />
