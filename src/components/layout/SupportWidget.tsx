@@ -110,7 +110,7 @@ export function SupportWidget(): JSX.Element | null {
 
   if (!open) return null;
 
-  
+
 
   return createPortal(
     <div
