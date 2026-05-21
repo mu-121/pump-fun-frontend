@@ -3,15 +3,9 @@ import { NavLink, useLocation } from "react-router-dom";
 import {
   BookOpen,
   ChevronDown,
-  Headphones,
-  Home,
-  LineChart,
-  Megaphone,
   PanelLeftClose,
   PanelLeftOpen,
   Plus,
-  Radio,
-  Smartphone,
   TrendingUp,
   X,
 } from "lucide-react";
@@ -22,15 +16,53 @@ import { Button } from "@/components/ui/Button";
 import { useSolBalance } from "@/hooks/useBalances";
 import { useUiStore } from "@/stores/uiStore";
 import { formatSol } from "@/lib/format";
+import TerminaliconPath from "../../../public/Images/Sidedrawer/terminal.svg";
+import Supporticon from "../../../public/Images/Sidedrawer/support.svg";
+import Liveicon from "../../../public/Images/Sidedrawer/live.svg";
+import Callout from "../../../public/Images/Sidedrawer/callout.svg";
+import Home from "../../../public/Images/Sidedrawer/home.svg";
+import Homefill from "../../../public/Images/Sidedrawer/homefill.svg";
+import Livefill from "../../../public/Images/Sidedrawer/livefill.svg";
+import Calloutfill from "../../../public/Images/Sidedrawer/calloutfill.svg";
 
 const NAV = [
-  { to: "/", label: "Home", icon: Home, end: true },
-  { to: "/callouts", label: "Callouts", icon: Megaphone, end: false },
-  { to: "/live", label: "Live", icon: Radio, end: false },
-  { to: "/support", label: "Support", icon: Headphones, end: false },
-  { to: "/terminal", label: "Terminal", icon: LineChart, end: false },
-  { to: "/?sort=trending", label: "Trending", icon: TrendingUp, end: false },
-  { to: "/how-it-works", label: "How it works", icon: BookOpen, end: false },
+  { to: "/", label: "Home", icon: Home, isImage: true, end: true },
+  {
+    to: "/callouts",
+    label: "Callouts",
+    icon: Callout,
+    isImage: true,
+    end: false,
+  },
+  { to: "/live", label: "Live", icon: Liveicon, isImage: true, end: false },
+  {
+    to: "/support",
+    label: "Support",
+    icon: Supporticon,
+    isImage: true,
+    end: false,
+  },
+  {
+    to: "/terminal",
+    label: "Terminal",
+    icon: TerminaliconPath,
+    isImage: true,
+    end: false,
+  },
+  // {
+  //   to: "/?sort=trending",
+  //   label: "Trending",
+  //   icon: TrendingUp,
+  //   isImage: false,
+  //   end: false,
+  // },
+  // {
+  //   to: "/how-it-works",
+  //   label: "How it works",
+  //   icon: BookOpen,
+  //   isImage: false,
+  //   end: false,
+  // },
 ] as const;
 
 /**
@@ -45,6 +77,7 @@ const NAV = [
  * renders full-width labels so taps are easy.
  */
 export function Sidebar(): JSX.Element {
+  const { publicKey } = useWallet();
   const collapsed = useUiStore((s) => s.sidebarCollapsed);
   const toggleDesktop = useUiStore((s) => s.toggleSidebar);
   const mobileOpen = useUiStore((s) => s.sidebarOpenMobile);
@@ -104,7 +137,7 @@ export function Sidebar(): JSX.Element {
           // pick up the persisted width animation.
           "lg:static lg:translate-x-0 lg:transform-none",
           "lg:transition-[width] lg:duration-200",
-          showCollapsedLayout ? "lg:w-[72px]" : "lg:w-[220px]",
+          showCollapsedLayout ? "lg:w-[72px]" : "lg:w-[208px]",
         )}
         aria-hidden={
           // The drawer is always "present" on desktop. On mobile it's only
@@ -116,17 +149,17 @@ export function Sidebar(): JSX.Element {
       >
         <div
           className={cn(
-            "h-[64px] flex",
+            " flex",
             showCollapsedLayout
-              ? "px-2 py-3 flex flex-col items-center gap-2"
-              : "px-[8px] pb-[8px] pt-[16px] ",
+              ? "px-[8px] h-auto pb-[4px] pt-[16px] flex flex-col items-center gap-2"
+              : "px-[8px] h-[64px] pb-[8px] pt-[16px] ",
           )}
         >
           <div className="flex items-center justify-between gap-2 w-full">
             <NavLink
               to="/"
               className={cn(
-                "flex items-center gap-2 group min-w-0",
+                "flex px-[14px] items-center gap-2 group min-w-0",
                 showCollapsedLayout && "justify-center w-full",
               )}
               title={showCollapsedLayout ? env.platformName : undefined}
@@ -203,7 +236,7 @@ export function Sidebar(): JSX.Element {
                 type="button"
                 onClick={toggleDesktop}
                 aria-label="Collapse sidebar"
-                className="ml-[10px] mt-[4px] rounded-md text-text-muted hover:text-text-primary hover:bg-surface-elevated transition-colors hidden lg:inline-flex"
+                className="ml-[10px] mt-[4px] h-[36px] w-[36px] justify-center items-center rounded-md text-text-muted hover:text-text-primary hover:bg-surface-elevated transition-colors hidden lg:inline-flex"
               >
                 <PanelLeftClose className="h-4 w-4" />
               </button>
@@ -216,20 +249,23 @@ export function Sidebar(): JSX.Element {
               type="button"
               onClick={toggleDesktop}
               aria-label="Expand sidebar"
-              className="grid place-items-center h-8 w-8 rounded-md text-text-muted hover:text-text-primary hover:bg-surface-elevated transition-colors hidden lg:grid"
+              className="grid place-items-center h-[36px] w-[36px] rounded-md text-text-muted  hidden lg:grid"
             >
-              <PanelLeftOpen className="h-4 w-4" />
+              <PanelLeftOpen
+                className="h-4 w-4"
+                style={{ color: "rgb(54, 58, 63 / var(--tw-text-opacity, 1))" }}
+              />
             </button>
           ) : null}
         </div>
 
         <nav
           className={cn(
-            "p-4 py-[8px] flex flex-col gap-2 overflow-y-auto",
+            "p-4 pt-[8px] pb-0 flex flex-col  gap-2 overflow-y-auto",
             showCollapsedLayout ? " items-stretch" : "",
           )}
         >
-          {NAV.map(({ to, label, icon: Icon, end }) => (
+          {NAV.map(({ to, label, icon: Icon, isImage, end }) => (
             <NavLink
               key={to}
               to={to}
@@ -237,26 +273,57 @@ export function Sidebar(): JSX.Element {
               title={showCollapsedLayout ? label : undefined}
               className={({ isActive }) =>
                 cn(
-                  "relative flex items-center rounded-md text-[14px] font-medium transition-colors",
+                  "relative flex items-center leading-[1.25rem] font-[Inter] rounded-md text-[14px] font-medium transition-colors",
                   showCollapsedLayout
-                    ? "justify-center h-10 w-full"
+                    ? "justify-center h-[40px] w-[40px]"
                     : "gap-2 p-2",
-                     isActive ? "font-medium" : "font-normal",
+                  isActive ? "font-medium" : "font-normal",
                   isActive
                     ? "text-text-[#FAFAFA] bg-[#18191B]"
                     : "text-text-[#FAFAFA]  hover:bg-[#18191B]",
                 )
               }
             >
+              {/* {({ isActive }) => (
+                <>
+                  <Icon className="h-4 w-4 shrink-0" />
+                  {!showCollapsedLayout ? label : null}
+                </>
+              )} */}
               {({ isActive }) => (
                 <>
-                  {/* {isActive && !showCollapsedLayout ? (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-primary" />
-                  ) : null}
-                  {isActive && showCollapsedLayout ? (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-r-full bg-primary" />
-                  ) : null} */}
-                  <Icon className="h-4 w-4 shrink-0" />
+                  {isImage ? (
+                    <img
+                      src={
+                        isActive && label === "Home"
+                          ? Homefill
+                          : isActive && label === "Live"
+                            ? Livefill
+                            : isActive && label === "Callouts"
+                              ? Calloutfill
+                              : Icon
+                      }
+                      alt={label}
+                      className={cn(
+                        "shrink-0 transition-all duration-200",
+                        // Apply green filter only for icons without fill version
+                        isActive &&
+                          label !== "Home" &&
+                          label !== "Live" &&
+                          label !== "Callouts" &&
+                          label !== "Terminal" &&
+                          label !== "Support" &&
+                          "icon-active-green",
+                      )}
+                    />
+                  ) : (
+                    <Icon
+                      className={cn(
+                        "shrink-0",
+                        isActive ? "text-[#86EFAC]" : "text-white",
+                      )}
+                    />
+                  )}
                   {!showCollapsedLayout ? label : null}
                 </>
               )}
@@ -266,19 +333,20 @@ export function Sidebar(): JSX.Element {
 
         <div
           className={cn(
-            "flex flex-col gap-[12px]",
-            showCollapsedLayout ? "p-2" : "p-[8px] pt-[12px]",
+            "flex flex-col  gap-[12px]",
+            showCollapsedLayout ? "p-2 items-center" : "p-[8px] pt-[12px]",
           )}
         >
           <NavLink
             to="/create"
+            className="border-none border-0 box-unset"
             title={showCollapsedLayout ? "Create coin" : undefined}
           >
             {showCollapsedLayout ? (
               <span
                 className={cn(
-                  "flex items-center justify-center h-10 w-full rounded-xl",
-                  "bg-[#86EFAC] text-background hover:bg-[#86EFAC] transition-colors",
+                  "flex items-center justify-center h-[40px] w-[40px] rounded-xl",
+                  "bg-[#86EFAC] text-background hover:bg-[#86EFAC] hover:bg-opacity-75 transition-colors",
                 )}
               >
                 <Plus className="h-4 w-4" />
@@ -288,26 +356,30 @@ export function Sidebar(): JSX.Element {
                 variant="primary"
                 fullWidth
                 size="lg"
-                leftIcon={<Plus className="h-4 w-4" />}
+                className="font-[Inter]"
+                // leftIcon={<Plus className="h-4 w-4" />}
               >
-                Create coin
+                Create
               </Button>
             )}
           </NavLink>
           <button
             type="button"
             className={cn(
-              "flex items-center rounded-xl bg-surface-elevated border border-border text-sm font-medium text-text-primary hover:border-text-muted/40 transition-colors",
+              "flex items-center rounded-xl bg-[#212225] justify-center gap-[8px] border border-border text-[14px] font-semibold font-medium text-text-primary hover:border-text-muted/40 transition-colors",
               showCollapsedLayout
-                ? "justify-center h-10 w-full"
+                ? "justify-center h-[40px] w-[40px]"
                 : "gap-2 h-10 px-3",
             )}
             title="Try the mobile app (coming soon)"
           >
-            <Smartphone className="h-4 w-4" />
-            {!showCollapsedLayout ? <span>Try app</span> : null}
+            {/* <Smartphone className="h-4 w-4" /> */}
+            <img src="/Images/Sidedrawer/tryapp.svg" c />
+            {!showCollapsedLayout ? (
+              <span className="font-[Inter]">Try app</span>
+            ) : null}
           </button>
-          {!showCollapsedLayout ? <HoldingsDrawer /> : null}
+          {!showCollapsedLayout && publicKey ? <HoldingsDrawer /> : null}
         </div>
       </aside>
     </>
