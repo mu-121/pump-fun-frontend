@@ -49,6 +49,7 @@ export function Sidebar(): JSX.Element {
   const toggleDesktop = useUiStore((s) => s.toggleSidebar);
   const mobileOpen = useUiStore((s) => s.sidebarOpenMobile);
   const setMobileOpen = useUiStore((s) => s.setSidebarOpenMobile);
+  const setSupportWidgetOpen = useUiStore((s) => s.setSupportWidgetOpen);
 
   const location = useLocation();
   // Close the mobile drawer when the route changes
@@ -229,39 +230,64 @@ export function Sidebar(): JSX.Element {
             showCollapsedLayout ? "px-2 items-stretch" : "px-3",
           )}
         >
-          {NAV.map(({ to, label, icon: Icon, end }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={end}
-              title={showCollapsedLayout ? label : undefined}
-              className={({ isActive }) =>
-                cn(
-                  "relative flex items-center rounded-xl text-[14px] font-medium transition-colors",
-                  showCollapsedLayout
-                    ? "justify-center h-10 w-full"
-                    : "gap-3 px-3 py-2.5",
-                     isActive ? "font-medium" : "font-normal",
-                  isActive
-                    ? "text-text-[#FAFAFA] bg-surface-elevated"
-                    : "text-text-[#FAFAFA] hover:text-text-primary hover:bg-surface-elevated/60",
-                )
-              }
-            >
-              {({ isActive }) => (
-                <>
-                  {isActive && !showCollapsedLayout ? (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-primary" />
-                  ) : null}
-                  {isActive && showCollapsedLayout ? (
-                    <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-r-full bg-primary" />
-                  ) : null}
+          {NAV.map(({ to, label, icon: Icon, end }) => {
+            if (to === '/support') {
+              return (
+                <button
+                  key={to}
+                  onClick={() => {
+                    setSupportWidgetOpen(true);
+                    if (mobileOpen) setMobileOpen(false);
+                  }}
+                  title={showCollapsedLayout ? label : undefined}
+                  className={cn(
+                    "relative flex items-center rounded-xl text-[14px] font-normal transition-colors",
+                    showCollapsedLayout
+                      ? "justify-center h-10 w-full"
+                      : "gap-3 px-3 py-2.5",
+                    "text-text-[#FAFAFA] hover:text-text-primary hover:bg-surface-elevated/60"
+                  )}
+                >
                   <Icon className="h-4 w-4 shrink-0" />
                   {!showCollapsedLayout ? label : null}
-                </>
-              )}
-            </NavLink>
-          ))}
+                </button>
+              );
+            }
+            
+            return (
+              <NavLink
+                key={to}
+                to={to}
+                end={end}
+                title={showCollapsedLayout ? label : undefined}
+                className={({ isActive }) =>
+                  cn(
+                    "relative flex items-center rounded-xl text-[14px] transition-colors",
+                    showCollapsedLayout
+                      ? "justify-center h-10 w-full"
+                      : "gap-3 px-3 py-2.5",
+                    isActive ? "font-medium" : "font-normal",
+                    isActive
+                      ? "text-text-[#FAFAFA] bg-surface-elevated"
+                      : "text-text-[#FAFAFA] hover:text-text-primary hover:bg-surface-elevated/60",
+                  )
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    {isActive && !showCollapsedLayout ? (
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-primary" />
+                    ) : null}
+                    {isActive && showCollapsedLayout ? (
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-r-full bg-primary" />
+                    ) : null}
+                    <Icon className="h-4 w-4 shrink-0" />
+                    {!showCollapsedLayout ? label : null}
+                  </>
+                )}
+              </NavLink>
+            );
+          })}
         </nav>
 
         <div

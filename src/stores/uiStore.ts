@@ -35,6 +35,10 @@ interface UiState {
   /** Mobile-only: sidebar drawer is open. Not persisted (transient). */
   sidebarOpenMobile: boolean;
   setSidebarOpenMobile: (v: boolean) => void;
+
+  /** Global support widget visibility */
+  supportWidgetOpen: boolean;
+  setSupportWidgetOpen: (v: boolean) => void;
 }
 
 export const useUiStore = create<UiState>((set, get) => ({
@@ -56,4 +60,7 @@ export const useUiStore = create<UiState>((set, get) => ({
 
   sidebarOpenMobile: false,
   setSidebarOpenMobile: (v: boolean) => set({ sidebarOpenMobile: v }),
+
+  supportWidgetOpen: false,
+  setSupportWidgetOpen: (v: boolean) => set({ supportWidgetOpen: v }),
 }));
