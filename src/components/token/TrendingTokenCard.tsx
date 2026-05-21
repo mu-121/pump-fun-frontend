@@ -1,8 +1,8 @@
-import { memo } from 'react';
-import { Link } from 'react-router-dom';
-import { formatMarketCap } from '@/lib/format';
-import { cn } from '@/lib/utils';
-import type { Token } from '@/types';
+import { memo } from "react";
+import { Link } from "react-router-dom";
+import { formatMarketCap } from "@/lib/format";
+import { cn } from "@/lib/utils";
+import type { Token } from "@/types";
 
 interface TrendingTokenCardProps {
   token: Token;
@@ -14,46 +14,57 @@ export const TrendingTokenCard = memo(function TrendingTokenCard({
   token,
   className,
 }: TrendingTokenCardProps): JSX.Element {
-  const initial = (token.symbol || token.name || '?').slice(0, 1).toUpperCase();
+  const initial = (token.symbol || token.name || "?").slice(0, 1).toUpperCase();
 
   return (
     <Link
       to={`/token/${token.mintAddress}`}
       className={cn(
-        'block shrink-0 w-[280px] sm:w-[320px] snap-start group',
+        "shrink-0 w-[240px] sm:w-[264px] snap-start group",
+        "flex flex-col gap-y-2",
         className,
       )}
     >
-      <article
-        className={cn(
-          'relative h-[180px] rounded-2xl overflow-hidden border border-border',
-          'transition-all group-hover:border-primary/40 group-hover:shadow-glow-primary',
-        )}
-      >
+      <div className="relative flex aspect-[3/2] w-full cursor-pointer overflow-hidden rounded-[12px] transition-transform group-hover:scale-[1.025]">
         {token.imageUrl ? (
           <img
             src={token.imageUrl}
-            alt=""
+            alt={token.name}
             loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="aspect-square h-full w-full rounded-md object-cover"
           />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-surface grid place-items-center text-5xl font-bold text-text-muted">
+          <div className="aspect-square h-full w-full rounded-md bg-gradient-to-br from-primary/20 to-surface grid place-items-center text-5xl font-bold text-text-muted">
             {initial}
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/10" />
-        <div className="absolute bottom-0 left-0 right-0 p-4">
-          <p className="text-lg font-bold text-white truncate">{token.name || 'Unnamed'}</p>
-          <p className="text-xs text-white/70 font-mono">${token.symbol}</p>
-          <p className="mt-2 text-base font-mono font-semibold text-primary tabular-nums">
-            {formatMarketCap(token.marketCapUsd)} MC
-          </p>
-          {token.description ? (
-            <p className="mt-1 text-xs text-white/60 line-clamp-1">{token.description}</p>
-          ) : null}
+        <div className="absolute bottom-0 left-0 w-full bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.08)_30%,rgba(0,0,0,0.4)_60%,rgba(0,0,0,0.85)_100%)] px-3 pb-3 pt-12">
+          <div className="flex items-center justify-between gap-x-3">
+            <div className="inline-block rounded-sm transform-gpu text-foreground will-change-[background-color] font-bold text-[18px] text-[#FAFAFA]">
+              {(() => {
+                const value = formatMarketCap(token.marketCapUsd);
+                return value?.startsWith("$") ? value : `$${value}`;
+              })()}
+            </div>
+          </div>
+          <div className="flex items-end gap-x-1.5">
+            <p className="truncate font-medium text-[16px] text-[#FAFAFA]">
+              {token.name || "Unnamed"}
+            </p>
+            <p className="mb-px truncate text-[14px] font-base text-[#FAFAFA]">
+              {token.symbol}
+            </p>
+          </div>
         </div>
-      </article>
+      </div>
+      {token.description ? (
+        <p className="w-full line-clamp-2 text-[14px] text-[#A1A1AA] text-left">
+          {token.description
+            ? token.description.charAt(0).toUpperCase() +
+              token.description.slice(1)
+            : ""}
+        </p>
+      ) : null}
     </Link>
   );
 });

@@ -63,6 +63,7 @@ export function HomePage(): JSX.Element {
       <section>
         <SectionHeader
           title="Graduating soon"
+          className="mb-3"
           icon={<Flame className="h-4 w-4 text-orange-400" />}
           action={
             <button
@@ -91,6 +92,7 @@ export function HomePage(): JSX.Element {
       <section>
         <SectionHeader
           title="Trending now"
+          className="mb-3"
           icon={<TrendingUp className="h-4 w-4 text-primary" />}
         />
         {trendingQuery.isLoading ? (
@@ -160,15 +162,17 @@ function SectionHeader({
   title,
   icon,
   action,
+  className,
 }: {
   title: string;
   icon?: React.ReactNode;
   action?: React.ReactNode;
+  className?: string;
 }): JSX.Element {
   return (
-    <div className="flex items-center justify-between gap-3 mb-3">
-      <h2 className="flex items-center gap-2 text-base sm:text-lg font-semibold tracking-tight text-text-primary">
-        {icon}
+    <div className={cn("flex items-center justify-between gap-3", className)}>
+      <h2 className="font-medium text-[20px] text-[#FAFAFA]">
+        {/* {icon} */}
         {title}
       </h2>
       {action}
