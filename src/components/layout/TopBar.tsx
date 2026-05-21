@@ -110,7 +110,7 @@ export function TopBar(): JSX.Element {
           </div>
 
           {/* RIGHT: action buttons */}
-          <div className="flex items-center justify-end h-full grow-[1] basis-0 gap-x-2 min-w-0 max-lg:grow-0 max-lg:basis-auto">
+          <div className="flex items-center justify-end h-full grow-[1] basis-0 gap-x-3 min-w-0 max-lg:grow-0 max-lg:basis-auto">
 
             {/* Mobile search icon — hidden on lg+ */}
             <button
@@ -128,6 +128,9 @@ export function TopBar(): JSX.Element {
             >
               <Search className="h-5 w-5" aria-hidden />
             </button>
+
+            {/* Product Updates */}
+            <ProductUpdatesPill />
 
             {/* Voice chat */}
             <VoiceChatPill />
@@ -254,17 +257,18 @@ function VoiceChatPill(): JSX.Element {
           <Mic className="h-5 w-5" aria-hidden />
         </button>
 
-        {/* Notification dot */}
+        {/* Notification badge */}
         {hasNotification && (
-          <span
-            aria-hidden
-            className="pointer-events-none absolute right-0.5 top-0.5 flex h-3 w-3 items-center justify-center rounded-full bg-bg-primary"
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inset-0 animate-ping rounded-full bg-red-500 opacity-60" />
-              <span className="relative h-2 w-2 rounded-full bg-red-500" />
-            </span>
-          </span>
+          <>
+            <div className="absolute -right-1.5 -top-1.5 z-50 pointer-events-none">
+              <span className="flex h-[22px] w-[22px] items-center justify-center rounded-full bg-bg-accent text-xs font-bold text-bg-primary shadow-sm">
+                5
+              </span>
+            </div>
+            <div className="absolute -right-1.5 -top-1.5 z-40 pointer-events-none">
+              <span className="flex h-[22px] w-[22px] animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite] items-center justify-center rounded-full bg-bg-accent text-xs font-bold text-bg-primary shadow-sm"></span>
+            </div>
+          </>
         )}
 
         {/* ── Popover ── */}
@@ -536,6 +540,186 @@ function ClaimProfileModal({ room, onClose }: { room: Room | null; onClose: () =
           </button>
         </div>
       </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   ProductUpdates Data
+───────────────────────────────────────────── */
+type ProductUpdate = {
+  id: string;
+  title: string;
+  description: string;
+  timeAgo: string;
+  isNew?: boolean;
+  isSelected?: boolean;
+  hasIcon?: boolean;
+};
+
+const PRODUCT_UPDATES: ProductUpdate[] = [
+  {
+    id: "1",
+    title: "Improved coin narratives",
+    description: "Quickly understand the narratives of top coins.",
+    timeAgo: "2w ago",
+    isSelected: true,
+    hasIcon: true,
+  },
+  {
+    id: "2",
+    title: "Coin voice chats",
+    description: "Drop into a voice chat on any coin page and trade alongside the community.",
+    timeAgo: "2w ago",
+    isNew: true,
+  },
+  {
+    id: "3",
+    title: "Charity coins",
+    description: "Create charity coins to raise funds for causes you care about.",
+    timeAgo: "3w ago",
+    isNew: true,
+  },
+  {
+    id: "4",
+    title: "X profile badge",
+    description: "Verify your X account and display a badge on your profile.",
+    timeAgo: "3w ago",
+    isNew: true,
+  },
+];
+
+/* ─────────────────────────────────────────────
+   ProductUpdatesPill
+───────────────────────────────────────────── */
+function ProductUpdatesPill(): JSX.Element {
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const popoverRef = useRef<HTMLDivElement>(null);
+
+  /* close popover on outside click */
+  useEffect(() => {
+    function handler(e: MouseEvent) {
+      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
+        setPopoverOpen(false);
+      }
+    }
+    if (popoverOpen) document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [popoverOpen]);
+
+  return (
+    <div ref={popoverRef} className="relative">
+      <div className="relative">
+        <button
+          type="button"
+          aria-label="View new product updates"
+          onClick={() => setPopoverOpen((v) => !v)}
+          className={cn(
+            'grid place-items-center',
+            'h-10 w-10 rounded-lg border border-border bg-surface-elevated',
+            'text-text-muted hover:text-text-primary transition-colors cursor-pointer',
+          )}
+        >
+          <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14.0006 2C14.0006 2 14.1783 3.04001 14.0006 4C13.8091 5.03394 13.0006 6 13.0006 6M15.5006 8.5L16.5006 7.5M18.3006 4.75L18.7506 3.5M20.0006 8L21.0006 7.5M18.0006 11C18.0006 11 18.7567 11.032 19.5006 11.27C20.1711 11.4846 21.0006 12 21.0006 12M4.31211 20.9697L16.5238 16.5362C17.2117 16.2864 17.4071 15.4066 16.8897 14.8891L9.1115 7.11092C8.59401 6.59343 7.71417 6.78886 7.46442 7.47677L3.03088 19.6885C2.74126 20.4862 3.51438 21.2593 4.31211 20.9697Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+          </svg>
+        </button>
+        {/* Notification badge */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute right-0.5 top-0.5 flex h-3 w-3 items-center justify-center rounded-full bg-bg-primary"
+        >
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inset-0 animate-ping rounded-full bg-red-500 opacity-60"></span>
+            <span className="relative h-2 w-2 rounded-full bg-red-500"></span>
+          </span>
+        </span>
+      </div>
+
+      {popoverOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-[999] bg-black/40 backdrop-blur-sm"
+            onClick={() => setPopoverOpen(false)}
+          />
+          <div
+            role="dialog"
+            className={cn(
+              "absolute right-0 top-[calc(100%+8px)] z-[1000]",
+              "w-[340px] overflow-hidden rounded-xl",
+              "border border-border-secondary bg-[#18191B] shadow-lg outline-none flex flex-col"
+            )}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-4 py-3">
+              <div className="flex items-center gap-2 text-text-primary">
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M14.0006 2C14.0006 2 14.1783 3.04001 14.0006 4C13.8091 5.03394 13.0006 6 13.0006 6M15.5006 8.5L16.5006 7.5M18.3006 4.75L18.7506 3.5M20.0006 8L21.0006 7.5M18.0006 11C18.0006 11 18.7567 11.032 19.5006 11.27C20.1711 11.4846 21.0006 12 21.0006 12M4.31211 20.9697L16.5238 16.5362C17.2117 16.2864 17.4071 15.4066 16.8897 14.8891L9.1115 7.11092C8.59401 6.59343 7.71417 6.78886 7.46442 7.47677L3.03088 19.6885C2.74126 20.4862 3.51438 21.2593 4.31211 20.9697Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                </svg>
+                <h3 className="font-semibold text-sm">What's new</h3>
+              </div>
+              <span className="text-xs text-text-tertiary">3 new</span>
+            </div>
+
+            {/* Content List */}
+            {/* Content List */}
+            <div className="flex max-h-[400px] flex-col overflow-y-auto p-2 gap-1">
+              {PRODUCT_UPDATES.map((update) => (
+               <div
+  key={update.id}
+  className={cn(
+    "flex flex-col gap-1 rounded-lg px-3 py-2.5 transition-colors overflow-hidden cursor-pointer",
+
+    update.isSelected
+      ? "group relative bg-gradient-to-br from-primary/[0.10] to-transparent ring-1 ring-inset ring-primary/25 hover:from-primary/[0.14]"
+      : "border-transparent hover:bg-white/5"
+  )}
+>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      {update.hasIcon && (
+                        <svg
+                          aria-hidden="true"
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="text-bg-accent shrink-0"
+                        >
+                          <path
+                            d="M14.0006 2C14.0006 2 14.1783 3.04001 14.0006 4C13.8091 5.03394 13.0006 6 13.0006 6M15.5006 8.5L16.5006 7.5M18.3006 4.75L18.7506 3.5M20.0006 8L21.0006 7.5M18.0006 11C18.0006 11 18.7567 11.032 19.5006 11.27C20.1711 11.4846 21.0006 12 21.0006 12M4.31211 20.9697L16.5238 16.5362C17.2117 16.2864 17.4071 15.4066 16.8897 14.8891L9.1115 7.11092C8.59401 6.59343 7.71417 6.78886 7.46442 7.47677L3.03088 19.6885C2.74126 20.4862 3.51438 21.2593 4.31211 20.9697Z"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      )}
+                      <span className="font-semibold text-[13px] text-text-primary">
+                        {update.title}
+                      </span>
+                    </div>
+                    {update.isNew && (
+                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-bg-accent/20 text-bg-accent uppercase tracking-wide">
+                        New
+                      </span>
+                    )}
+                  </div>
+
+                  <p className="text-[13px] text-text-secondary mt-0.5 leading-snug">
+                    {update.description}
+                  </p>
+
+                  <span className="text-xs text-text-tertiary mt-1 pb-[15px]">
+                    {update.timeAgo}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
