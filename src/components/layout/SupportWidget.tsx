@@ -26,7 +26,7 @@ export function SupportWidget(): JSX.Element | null {
           ? "w-[800px] h-[800px] max-w-[95vw] max-h-[95vh]"
           : "w-[380px] h-[600px]"
       )}
-      style={{ fontFamily: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif' }}
+      style={{ fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif' }}
     >
       {activeTab === "home" && (
         <SupportHomeTab

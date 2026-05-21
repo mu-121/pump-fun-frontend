@@ -21,8 +21,8 @@ export function LiveTape(): JSX.Element {
   const items = useMemo(() => tape.slice(0, 20), [tape]);
 
   return (
-    <div className="relative overflow-hidden rounded-xl border border-border bg-surface/60 backdrop-blur-sm">
-      <div className="flex items-center gap-3 px-3 py-2">
+    <div className="">
+      {/* <div className="flex items-center gap-3 px-3 py-2">
         <LiveBadge connected={connected} />
         <div className="relative flex-1 overflow-hidden">
           {items.length === 0 ? (
@@ -36,7 +36,7 @@ export function LiveTape(): JSX.Element {
               {items.map((t, i) => (
                 <TapeEntry key={`${t.signature}-${i}`} trade={t} />
               ))}
-              {/* Duplicate for seamless loop */}
+            
               <div aria-hidden="true" className="flex gap-6 motion-reduce:hidden">
                 {items.map((t, i) => (
                   <TapeEntry key={`dup-${t.signature}-${i}`} trade={t} />
@@ -45,7 +45,7 @@ export function LiveTape(): JSX.Element {
             </div>
           )}
         </div>
-      </div>
+      </div> */}
 
       <style>{`
         .marquee {

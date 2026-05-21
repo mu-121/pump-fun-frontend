@@ -111,7 +111,7 @@ export function SupportHelpTab({
 
       {/* Search bar */}
       {!selectedArticle && (
-        <div className="px-4 pb-3 shrink-0">
+        <div className="px-4 pb-3 shrink-0 mt-[20px]">
           <div className="flex items-center justify-between w-full h-[40px] px-3 bg-[#F5F5F5] rounded-lg">
             <span className="font-medium text-[#6C6F74] text-[14px]">
               Search for help
