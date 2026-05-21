@@ -1,11 +1,16 @@
-import { useEffect, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
+  ArrowLeft,
   BookOpen,
   ChevronDown,
+  Loader2,
+  Megaphone,
   PanelLeftClose,
   PanelLeftOpen,
   Plus,
+  Radio,
+  Search,
   TrendingUp,
   X,
 } from "lucide-react";
@@ -16,6 +21,10 @@ import { Button } from "@/components/ui/Button";
 import { useSolBalance } from "@/hooks/useBalances";
 import { useUiStore } from "@/stores/uiStore";
 import { formatSol } from "@/lib/format";
+import { Modal } from "@/components/ui/Modal";
+import { useTokens } from "@/hooks/useTokens";
+import type { Token } from "@/types/token";
+import toast from "react-hot-toast";
 import TerminaliconPath from "../../../public/Images/Sidedrawer/terminal.svg";
 import Supporticon from "../../../public/Images/Sidedrawer/support.svg";
 import Liveicon from "../../../public/Images/Sidedrawer/live.svg";
@@ -76,6 +85,13 @@ const NAV = [
  * The desktop "collapsed" state never applies on mobile — the drawer always
  * renders full-width labels so taps are easy.
  */
+const formatMcap = (val: number): string => {
+  if (val >= 1e9) return `$${(val / 1e9).toFixed(2)}B`;
+  if (val >= 1e6) return `$${(val / 1e6).toFixed(2)}M`;
+  if (val >= 1e3) return `$${(val / 1e3).toFixed(1)}K`;
+  return `$${val.toFixed(0)}`;
+};
+
 export function Sidebar(): JSX.Element {
   const { publicKey } = useWallet();
   const collapsed = useUiStore((s) => s.sidebarCollapsed);
@@ -84,10 +100,50 @@ export function Sidebar(): JSX.Element {
   const setMobileOpen = useUiStore((s) => s.setSidebarOpenMobile);
 
   const location = useLocation();
-  // Close the mobile drawer when the route changes
+  const [createMenuOpen, setCreateMenuOpen] = useState(false);
+  const createTriggerRef = useRef<HTMLDivElement | null>(null);
+
+  const [calloutModalOpen, setCalloutModalOpen] = useState(false);
+  const [goLiveModalOpen, setGoLiveModalOpen] = useState(false);
+  const [tryAppModalOpen, setTryAppModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedToken, setSelectedToken] = useState<Token | null>(null);
+  const [calloutNote, setCalloutNote] = useState("");
+const navigate = useNavigate();
+  const tokensQuery = useTokens({
+    sort: "trending",
+    search: searchQuery || undefined,
+  });
+  const tokenItems =
+    tokensQuery.data?.pages.flatMap((page) => page.items) ?? [];
+
+  // Close the mobile drawer and create menu when the route changes
   useEffect(() => {
     setMobileOpen(false);
+    setCreateMenuOpen(false);
   }, [location.pathname, location.search, setMobileOpen]);
+
+  // Close create menu on click outside
+  useEffect(() => {
+    if (!createMenuOpen) return;
+    const onClick = (e: MouseEvent): void => {
+      const t = e.target as Node;
+      if (createTriggerRef.current?.contains(t)) return;
+      setCreateMenuOpen(false);
+    };
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, [createMenuOpen]);
+
+  // Close create menu on Escape
+  useEffect(() => {
+    if (!createMenuOpen) return;
+    const onKey = (e: KeyboardEvent): void => {
+      if (e.key === "Escape") setCreateMenuOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [createMenuOpen]);
 
   // Esc closes the mobile drawer
   useEffect(() => {
@@ -268,8 +324,19 @@ export function Sidebar(): JSX.Element {
           {NAV.map(({ to, label, icon: Icon, isImage, end }) => (
             <NavLink
               key={to}
-              to={to}
+              to={label === "Live" ? "#" : to}
               end={end}
+              onClick={(e) => {
+                if (label === "Callouts") {
+                  e.preventDefault();
+                  navigate('/callouts')
+                }
+                if (label === "Live") {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setGoLiveModalOpen(true);
+                }
+              }}
               title={showCollapsedLayout ? label : undefined}
               className={({ isActive }) =>
                 cn(
@@ -337,32 +404,90 @@ export function Sidebar(): JSX.Element {
             showCollapsedLayout ? "p-2 items-center" : "p-[8px] pt-[12px]",
           )}
         >
-          <NavLink
-            to="/create"
-            className="border-none border-0 box-unset"
-            title={showCollapsedLayout ? "Create coin" : undefined}
+          <div
+            ref={createTriggerRef}
+            className="relative w-full flex flex-col items-center"
           >
-            {showCollapsedLayout ? (
-              <span
+            <button
+              type="button"
+              onClick={() => setCreateMenuOpen((prev) => !prev)}
+              className="w-full border-none border-0 box-unset text-left"
+              title={showCollapsedLayout ? "Create" : undefined}
+            >
+              {showCollapsedLayout ? (
+                <span
+                  className={cn(
+                    "flex items-center justify-center h-[40px] w-[40px] rounded-xl",
+                    "bg-[#86EFAC] text-background hover:bg-[#86EFAC] hover:bg-opacity-75 transition-colors",
+                  )}
+                >
+                  <Plus className="h-4 w-4" />
+                </span>
+              ) : (
+                <Button
+                  variant="primary"
+                  fullWidth
+                  size="lg"
+                  className="font-[Inter]"
+                >
+                  Create
+                </Button>
+              )}
+            </button>
+
+            {createMenuOpen && (
+              <div
                 className={cn(
-                  "flex items-center justify-center h-[40px] w-[40px] rounded-xl",
-                  "bg-[#86EFAC] text-background hover:bg-[#86EFAC] hover:bg-opacity-75 transition-colors",
+                  "absolute left-[calc(100%+5px)] z-50 min-w-[135.89px]",
+                  "rounded-[8px] border border-[#212225] bg-[#141517] p-[2px] flex flex-col shadow-2xl animate-fade-in",
+                  showCollapsedLayout ? "bottom-0" : "bottom-[3px]",
                 )}
               >
-                <Plus className="h-4 w-4" />
-              </span>
-            ) : (
-              <Button
-                variant="primary"
-                fullWidth
-                size="lg"
-                className="font-[Inter]"
-                // leftIcon={<Plus className="h-4 w-4" />}
-              >
-                Create
-              </Button>
+                <NavLink
+                  to="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (!showCollapsedLayout) {
+                      setCreateMenuOpen(false);
+                      setCalloutModalOpen(true);
+                    }
+                  }}
+                  className="flex items-center font-medium cursor-pointer gap-[8px] py-[0px] px-[12px] h-[40px] text-[14px] font-[Inter] leading-[1.25rem] text-[white] hover:bg-[#212225] hover:bg-opacity-100 transition-colors w-full text-left rounded-[6px]"
+                >
+                  <img src="../../../public/Images/Sidedrawer/callout.svg" className="text-[white] h-[24px]" />
+                  <span>Callout</span>
+                </NavLink>
+                <NavLink
+                  to="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (!showCollapsedLayout) {
+                      setCreateMenuOpen(false);
+                      setGoLiveModalOpen(true);
+                    }
+                  }}
+                  className="flex items-center font-medium cursor-pointer gap-[8px] py-[0px] px-[12px] h-[40px] text-[14px] font-[Inter] leading-[1.25rem] text-[white] hover:bg-[#212225] hover:bg-opacity-100 transition-colors w-full text-left rounded-[6px]"
+                >
+                  <img
+                    src="../../../public/Images/Sidedrawer/live.svg"
+                    className="text-[white] h-[24px]"
+                  />
+                  <span>Go live</span>
+                </NavLink>
+                <NavLink
+                  to="/create"
+                  onClick={() => setCreateMenuOpen(false)}
+                  className="flex items-center font-medium cursor-pointer whitespace-nowrap gap-[8px] py-[0px] px-[12px] h-[40px] text-[14px] font-[Inter] leading-[1.25rem] text-[white] hover:bg-[#212225] hover:bg-opacity-100 transition-colors w-full text-left rounded-[6px]"
+                >
+                  <img
+                    src="../../../public/Images/Sidedrawer/plus.svg"
+                    className="text-[white] h-[17px]"
+                  />
+                  <span>Create coin</span>
+                </NavLink>
+              </div>
             )}
-          </NavLink>
+          </div>
           <button
             type="button"
             className={cn(
@@ -372,15 +497,339 @@ export function Sidebar(): JSX.Element {
                 : "gap-2 h-10 px-3",
             )}
             title="Try the mobile app (coming soon)"
+            onClick={() => {
+              if (!showCollapsedLayout) {
+                setTryAppModalOpen(true);
+              }
+            }}
           >
             {/* <Smartphone className="h-4 w-4" /> */}
-            <img src="/Images/Sidedrawer/tryapp.svg" c />
+            <img src="/Images/Sidedrawer/tryapp.svg" />
             {!showCollapsedLayout ? (
               <span className="font-[Inter]">Try app</span>
             ) : null}
           </button>
-          {!showCollapsedLayout && publicKey ? <HoldingsDrawer /> : null}
+          {!showCollapsedLayout && publicKey ? (
+            <div className="mt-auto w-full">
+              <HoldingsDrawer />
+            </div>
+          ) : null}
         </div>
+
+        <Modal
+          open={calloutModalOpen}
+          onClose={() => {
+            setCalloutModalOpen(false);
+            setSearchQuery("");
+            setSelectedToken(null);
+            setCalloutNote("");
+          }}
+          className="max-w-[480px] w-full bg-[#111113] border border-[#212225] overflow-hidden p-0 shadow-2xl"
+        >
+          {!selectedToken ? (
+            /* Pane 1: Search Coin */
+            <>
+              {/* Custom Header */}
+              <div className="bg-[#0B150F] border-b border-[#212225] p-5 relative">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCalloutModalOpen(false);
+                    setSearchQuery("");
+                    setSelectedToken(null);
+                    setCalloutNote("");
+                  }}
+                  className="absolute top-4 right-4 p-1 rounded-md text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#18191B] transition-colors"
+                  aria-label="Close modal"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+
+                <div className="flex gap-4">
+                  <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-[#22C55E]/15 shrink-0">
+                    <Megaphone className="h-5 w-5 text-[#22C55E]" />
+                  </div>
+
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-bold text-[#22C55E] tracking-wider uppercase font-[Inter]">
+                      New Callout
+                    </span>
+                    <h2 className="text-lg font-bold text-[#FAFAFA] mt-0.5 font-[Inter]">
+                      Make a public bullish call
+                    </h2>
+                    <p className="text-xs text-[#A1A1AA] mt-1.5 leading-normal font-[Inter]">
+                      Pin your call to the current market cap. We'll track the
+                      multiple forward so your conviction is on record.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Custom Body */}
+              <div className="p-5 flex flex-col gap-4">
+                <div className="relative flex items-center">
+                  <Search className="absolute left-3.5 h-4 w-4 text-[#A1A1AA] pointer-events-none" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search a coin by name, symbol or mint"
+                    className={cn(
+                      "w-full bg-[#18191B] border border-[#212225] text-[#FAFAFA] placeholder:text-[#A1A1AA]",
+                      "rounded-lg py-2.5 pl-11 pr-4 text-sm focus:outline-none focus:border-[#22C55E]/40 focus:ring-1 focus:ring-[#22C55E]/20 transition-all font-[Inter]",
+                    )}
+                    autoFocus
+                  />
+                </div>
+
+                {!searchQuery ? (
+                  <div className="flex flex-col items-center justify-center py-20">
+                    <span className="text-sm text-[#A1A1AA] font-[Inter]">
+                      Start typing to find a coin.
+                    </span>
+                  </div>
+                ) : tokensQuery.isLoading ? (
+                  <div className="flex flex-col items-center justify-center py-20 gap-2">
+                    <Loader2 className="h-6 w-6 text-[#22C55E] animate-spin" />
+                    <span className="text-xs text-[#A1A1AA] font-[Inter]">
+                      Searching...
+                    </span>
+                  </div>
+                ) : tokenItems.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-20">
+                    <span className="text-sm text-[#A1A1AA] font-[Inter]">
+                      No coins found matching "{searchQuery}"
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col max-h-[250px] overflow-y-auto border border-[#212225] rounded-lg divide-y divide-[#212225] bg-[#18191B]/50">
+                    {tokenItems.map((token) => (
+                      <button
+                        key={token.id}
+                        type="button"
+                        onClick={() => setSelectedToken(token)}
+                        className="w-full flex items-center justify-between p-3 hover:bg-[#18191B] transition-colors text-left"
+                      >
+                        <div className="flex items-center gap-3">
+                          {token.imageUrl ? (
+                            <img
+                              src={token.imageUrl}
+                              alt={token.name}
+                              className="h-8 w-8 rounded-lg object-cover"
+                            />
+                          ) : (
+                            <span className="grid place-items-center h-8 w-8 rounded-lg bg-surface-elevated text-sm border border-border">
+                              🪙
+                            </span>
+                          )}
+                          <div className="flex flex-col">
+                            <span className="text-sm font-semibold text-[#FAFAFA] font-[Inter] leading-tight">
+                              {token.name}
+                            </span>
+                            <span className="text-xs text-[#A1A1AA] font-mono leading-tight mt-0.5">
+                              ${token.symbol}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-end">
+                          <span className="text-xs text-[#A1A1AA] font-[Inter]">
+                            Market Cap
+                          </span>
+                          <span className="text-xs font-mono font-medium text-[#22C55E] mt-0.5">
+                            {formatMcap(token.marketCapUsd)}
+                          </span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            /* Pane 2: Confirm Callout */
+            <>
+              {/* Custom Header */}
+              <div className="bg-[#0B150F] border-b border-[#212225] p-5 relative">
+                <button
+                  type="button"
+                  onClick={() => setSelectedToken(null)}
+                  className="absolute top-4 left-4 p-1 rounded-md text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#18191B] transition-colors flex items-center gap-1 text-xs"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  <span>Back</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCalloutModalOpen(false);
+                    setSearchQuery("");
+                    setSelectedToken(null);
+                    setCalloutNote("");
+                  }}
+                  className="absolute top-4 right-4 p-1 rounded-md text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#18191B] transition-colors"
+                  aria-label="Close modal"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+
+                <div className="mt-8 flex gap-4">
+                  <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-[#22C55E]/15 shrink-0">
+                    <Megaphone className="h-5 w-5 text-[#22C55E]" />
+                  </div>
+
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-bold text-[#22C55E] tracking-wider uppercase font-[Inter]">
+                      Confirm Callout
+                    </span>
+                    <h2 className="text-lg font-bold text-[#FAFAFA] mt-0.5 font-[Inter]">
+                      Publish your callout
+                    </h2>
+                    <p className="text-xs text-[#A1A1AA] mt-1.5 leading-normal font-[Inter]">
+                      Confirm your bullish call on {selectedToken.name} ($
+                      {selectedToken.symbol}) at its current valuation.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Custom Body */}
+              <div className="p-5 flex flex-col gap-4">
+                <div className="flex items-center justify-between p-3.5 bg-[#18191B] border border-[#212225] rounded-xl">
+                  <div className="flex items-center gap-3">
+                    {selectedToken.imageUrl ? (
+                      <img
+                        src={selectedToken.imageUrl}
+                        alt={selectedToken.name}
+                        className="h-10 w-10 rounded-lg object-cover"
+                      />
+                    ) : (
+                      <span className="grid place-items-center h-10 w-10 rounded-lg bg-surface-elevated text-lg border border-border">
+                        🪙
+                      </span>
+                    )}
+                    <div className="flex flex-col">
+                      <span className="text-sm font-bold text-[#FAFAFA] font-[Inter]">
+                        {selectedToken.name}
+                      </span>
+                      <span className="text-xs text-[#A1A1AA] font-mono mt-0.5">
+                        ${selectedToken.symbol}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="text-xs text-[#A1A1AA] font-[Inter]">
+                      Current Mcap
+                    </span>
+                    <span className="text-sm font-mono font-bold text-[#22C55E] mt-0.5">
+                      {formatMcap(selectedToken.marketCapUsd)}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-semibold text-[#A1A1AA] font-[Inter]">
+                    Optional Note
+                  </label>
+                  <textarea
+                    value={calloutNote}
+                    onChange={(e) => setCalloutNote(e.target.value)}
+                    placeholder="e.g. this one's heading to $50M, mark it"
+                    className={cn(
+                      "w-full bg-[#18191B] border border-[#212225] text-[#FAFAFA] placeholder:text-[#A1A1AA]",
+                      "rounded-lg p-3 text-sm focus:outline-none focus:border-[#22C55E]/40 focus:ring-1 focus:ring-[#22C55E]/20 transition-all font-[Inter] h-20 resize-none",
+                    )}
+                  />
+                </div>
+
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    toast.success(
+                      `Callout for $${selectedToken.symbol} published!`,
+                    );
+                    setCalloutModalOpen(false);
+                    setSearchQuery("");
+                    setSelectedToken(null);
+                    setCalloutNote("");
+                  }}
+                  fullWidth
+                  size="lg"
+                  className="font-[Inter] bg-[#22C55E] text-[#111113] hover:bg-[#22C55E]/80 transition-colors"
+                >
+                  Publish call
+                </Button>
+              </div>
+            </>
+          )}
+        </Modal>
+        <Modal
+          open={goLiveModalOpen}
+          onClose={() => setGoLiveModalOpen(false)}
+          className="max-w-[600px] w-full bg-[#14151c] border border-[#272A2D] rounded-[22px] overflow-hidden p-0 shadow-2xl"
+        >
+          <div className="p-[4px] text-center flex flex-col gap-8 text-[#FAFAFA]">
+            <img src="/Images/Sidedrawer/start-livestream-no-coins.svg" />
+            <div className="flex items-center flex-col">
+              <h2 className="text-[20px] font-[Inter] text-text-on-muted leading-[1.75rem] font-semibold">
+                Create your coin to go live
+              </h2>
+              <p className="text-[14px] leading-[1.25rem] font-[Inter] text-text-secondary text-center max-w-[460px] mt-2">
+                In order to start a livestream, you first need to create a coin,
+                then start streaming through it. As a creator you earn a split
+                of all trading fees 💰
+              </p>
+            </div>
+            <div className="flex justify-between items-center">
+              <button
+                // variant="primary"
+                onClick={() => setGoLiveModalOpen(false)}
+                className="leading-[1.5rem] font-[Inter] font-semibold text-[14px] px-[14px] h-[40px] bg-[#212225] rounded-[12px]"
+              >
+                Cancel
+              </button>
+              <button
+                variant="primary"
+                onClick={() => {setGoLiveModalOpen(false);
+                    navigate("/create", );}
+                }
+                className="leading-[1.5rem] font-[Inter] font-semibold text-[14px] px-[14px] h-[40px] bg-[#86EFAC] text-[#052e16] rounded-[12px]"
+              >
+                Create coin
+              </button>
+            </div>
+          </div>
+        </Modal>
+        <Modal
+          open={tryAppModalOpen}
+          onClose={() => setTryAppModalOpen(false)}
+          className="max-w-[402px] h-[404px] w-full bg-[#111113] border rounded-[16px] border-[#212225] overflow-hidden p-[0px] shadow-2xl"
+        >
+          <div className="p-[4px] flex items-center justify-center flex-col text-center text-[#FAFAFA]">
+            <h2 className="text-center text-[20px] leading-[1.75rem] font-semibold text-text-primary">
+              Pump is faster on the app
+            </h2>
+            <p className="mt-2 text-[#A1A1AA] text-[16px] text-opacity-100 mt-[8px] ">
+              Scan to download
+            </p>
+            <img
+              src="/Images/Sidedrawer/QR-try-app.svg"
+              className="my-[24px] h-[200px] w-[200px]"
+            />
+
+            <Button
+              variant="primary"
+              onClick={() => {
+                setTryAppModalOpen(false);
+                window.open("https://app.pump.fun/", "_blank");
+              }}
+              style={{ borderRadius: "16px" }}
+              className="w-full cursor-pointer h-[48px] text-[14px] font-[Inter] text-[#052e16] leading-[1.5] font-semibold rounded-[16px]"
+            >
+              Learn more
+            </Button>
+          </div>
+        </Modal>
       </aside>
     </>
   );
