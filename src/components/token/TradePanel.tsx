@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { ArrowDownUp, Wallet } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useWalletModal } from '@solana/wallet-adapter-react-ui';
+import { useWalletModal } from '@/providers/WalletModalProvider';
 import { useQueryClient } from '@tanstack/react-query';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
