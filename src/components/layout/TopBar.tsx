@@ -125,10 +125,10 @@ export function TopBar(): JSX.Element {
                     <path
                       d="M14.9998 20L7.70696 12.7071C7.31643 12.3166 7.31643 11.6834 7.70695 11.2929L14.9998 4"
                       stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    ></path>
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </button>
               )}
@@ -307,9 +307,9 @@ interface Room {
 }
 
 const GENERAL_ROOMS: Room[] = [
-  { id: "g1", name: "General 1", current: 8, max: 50 },
-  { id: "g2", name: "General 2", current: 1, max: 50 },
-  { id: "g3", name: "General 3", current: 0, max: 50 },
+  { id: 'g1', name: 'General 1', current: 8, max: 50 },
+  { id: 'g2', name: 'General 2', current: 1, max: 50 },
+  { id: 'g3', name: 'General 3', current: 0, max: 50 },
 ];
 
 const SQUAD_ROOMS: Room[] = [
@@ -411,7 +411,7 @@ function VoiceChatPill(): JSX.Element {
               className={cn(
                 "absolute right-0 top-[calc(100%+8px)] z-[1000]",
                 "w-[320px] overflow-hidden rounded-lg",
-                "border border-border-tertiary bg-[#18191B] shadow-md outline-none",
+                "border border-border-tertiary bg-[#18191B] shadow-md outline-none"
               )}
             >
               {/* Header */}
@@ -846,7 +846,7 @@ function ProductUpdatesPill(): JSX.Element {
             <div className="flex items-center justify-between px-4 py-3">
               <div className="flex items-center gap-2 text-text-primary">
                 <svg
-                  class="text-primary size-4"
+                  className="text-primary size-4"
                   aria-hidden="true"
                   width="24px"
                   height="24px"
@@ -878,14 +878,14 @@ function ProductUpdatesPill(): JSX.Element {
 
                     update.isSelected
                       ? "group relative bg-gradient-to-br from-primary/[0.10] to-transparent ring-1 ring-inset ring-primary/25 hover:from-primary/[0.14]"
-                      : "border-transparent hover:bg-white/5",
+                      : "border-transparent hover:bg-white/5"
                   )}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       {update.hasIcon && (
                         <svg
-                          class="text-primary size-3.5 shrink-0"
+                          className="text-primary size-3.5 shrink-0"
                           aria-hidden="true"
                           width="24px"
                           height="24px"
