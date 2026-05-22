@@ -28,7 +28,13 @@ import type { Token } from "@/types/token";
 import toast from "react-hot-toast";
 
 const NAV = [
-  { to: "/", label: "Home", icon: "/Images/Sidedrawer/home.svg", isImage: true, end: true },
+  {
+    to: "/",
+    label: "Home",
+    icon: "/Images/Sidedrawer/home.svg",
+    isImage: true,
+    end: true,
+  },
   {
     to: "/callouts",
     label: "Callouts",
@@ -36,7 +42,13 @@ const NAV = [
     isImage: true,
     end: false,
   },
-  { to: "/live", label: "Live", icon: "/Images/Sidedrawer/live.svg", isImage: true, end: false },
+  {
+    to: "/live",
+    label: "Live",
+    icon: "/Images/Sidedrawer/live.svg",
+    isImage: true,
+    end: false,
+  },
   {
     to: "/support",
     label: "Support",
@@ -107,9 +119,12 @@ export function Sidebar(): JSX.Element {
   const [selectedToken, setSelectedToken] = useState<Token | null>(null);
   const [calloutNote, setCalloutNote] = useState("");
   const navigate = useNavigate();
+  const normalizedQuery = searchQuery.trim().toLowerCase();
   const tokensQuery = useTokens({
     sort: "trending",
-    search: searchQuery || undefined,
+    search: normalizedQuery || undefined,
+    // Only fetch when a query is present to avoid unnecessary calls
+    // (depends on your data‑fetching library; you may also add an `enabled` flag)
   });
   const tokenItems =
     tokensQuery.data?.pages.flatMap((page) => page.items) ?? [];
@@ -321,7 +336,11 @@ export function Sidebar(): JSX.Element {
           {NAV.map(({ to, label, icon: Icon, isImage, end }) => (
             <NavLink
               key={to}
-              to={label === "Live" || label === "Support" || label === "Terminal" ? "#" : to}
+              to={
+                label === "Live" || label === "Support" || label === "Terminal"
+                  ? "#"
+                  : to
+              }
               end={end}
               onClick={(e) => {
                 if (label === "Callouts") {
@@ -336,7 +355,11 @@ export function Sidebar(): JSX.Element {
                 if (label === "Terminal") {
                   e.preventDefault();
                   e.stopPropagation();
-                  window.open("https://trade.padre.gg/sign-in", "_blank", "noopener,noreferrer");
+                  window.open(
+                    "https://trade.padre.gg/sign-in",
+                    "_blank",
+                    "noopener,noreferrer",
+                  );
                 }
                 if (label === "Support") {
                   e.preventDefault();
@@ -351,7 +374,9 @@ export function Sidebar(): JSX.Element {
                   showCollapsedLayout
                     ? "justify-center h-[40px] w-[40px]"
                     : "gap-2 p-2",
-                  isActive && label !== "Live" && label !== "Terminal" ? "font-medium" : "font-normal",
+                  isActive && label !== "Live" && label !== "Terminal"
+                    ? "font-medium"
+                    : "font-normal",
                   isActive && label !== "Live" && label !== "Terminal"
                     ? "text-text-[#FAFAFA] bg-[#18191B]"
                     : "text-text-[#FAFAFA]  hover:bg-[#18191B]",
@@ -527,8 +552,19 @@ export function Sidebar(): JSX.Element {
             </div>
           ) : null}
         </div>
-
-   <Modal
+        <div
+          className={cn(
+            "fixed inset-0 z-[998] bg-black/30 backdrop-blur-sm transition-all duration-200",
+            calloutModalOpen ? "opacity-100" : "opacity-0 pointer-events-none",
+          )}
+          onClick={() => {
+            setCalloutModalOpen(false);
+            setSearchQuery("");
+            setSelectedToken(null);
+            setCalloutNote("");
+          }}
+        />
+        <Modal
           open={calloutModalOpen}
           onClose={() => {
             setCalloutModalOpen(false);
@@ -536,13 +572,24 @@ export function Sidebar(): JSX.Element {
             setSelectedToken(null);
             setCalloutNote("");
           }}
-          className="max-w-[558px] w-full bg-[#111113] border border-[#212225] overflow-hidden p-0 shadow-2xl"
+          className="max-w-[560px] h-[473px] w-full bg-[#111113] border border-[#212225] overflow-hidden sm:rounded-lg rounded-2xl shadow-lg"
         >
           {!selectedToken ? (
             /* Pane 1: Search Coin */
-            <>
+            <div className="flex flex-col gap-4">
               {/* Custom Header */}
-              <div className="bg-[#111113] border-b border-[#212225] pb-5 relative">
+              <div className="relative overflow-hidden border-b border-white/5 p-[20px]">
+                {/* Gradient background layers */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#84EFAC]/15 via-[#84EFAC]/5 to-transparent"
+                ></div>
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -top-16 -right-16 size-40 rounded-full bg-[#84EFAC]/20 blur-3xl"
+                ></div>
+
+                {/* Close button */}
                 <button
                   type="button"
                   onClick={() => {
@@ -551,25 +598,32 @@ export function Sidebar(): JSX.Element {
                     setSelectedToken(null);
                     setCalloutNote("");
                   }}
-                  className="absolute top-[-4px] right-4 p-1 rounded-lg text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#18191B] transition-colors"
+                  className="absolute top-[12px] right-4 z-10 p-1 rounded-lg text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#18191B] transition-colors"
                   aria-label="Close modal"
                 >
-                  <X className="h-4 w-4" />
+                  <img
+                    src="/Images/Sidedrawer/cross.svg"
+                    className="h-4 w-4 pointer-events-none"
+                  />
                 </button>
 
-                <div className="flex gap-4">
-                  <div style={{ backgroundColor: 'rgba(132, 239, 172, 0.9)',   boxShadow: '0 6px 24px -10px rgba(132, 239, 172, 0.55)' }} className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-green/90 via-primary-green/70 to-primary-green/40 text-black shadow-[0_6px_24px_-10px_rgba(132,239,172,0.55)]">
-                    <img src="/Images/Sidedrawer/calloutmodel.svg" className="h-5 w-5 text-[#22C55E]" />
+                {/* Content */}
+                <div className="relative z-10 flex gap-3">
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#84EFAC]/90 via-[#84EFAC]/70 to-[#84EFAC]/40 text-black shadow-[0_6px_24px_-10px_rgba(132,239,172,0.55)]">
+                    <img
+                      src="/Images/Sidedrawer/calloutmodel.svg"
+                      className="h-5 w-5"
+                    />
                   </div>
 
                   <div className="flex flex-col">
                     <span className="text-[10px] font-medium text-[#A1A1AA] tracking-wider uppercase font-[Inter]">
                       New Callout
                     </span>
-                    <h2 className="text-[16px] font-semibold text-[#FAFAFA] mt-0.5 font-[Inter]">
+                    <h2 className="text-[16px] font-semibold text-[#FAFAFA] my-[4px] font-[Inter]">
                       Make a public bullish call
                     </h2>
-                    <p className="text-[12px] text-[#A1A1AA] mt-1.5 leading-[1.625rem] font-[Inter]">
+                    <p className="text-[12px] text-[#A1A1AA] leading-[1.625] font-[Inter]">
                       Pin your call to the current market cap. We'll track the
                       multiple forward so your conviction is on record.
                     </p>
@@ -578,7 +632,7 @@ export function Sidebar(): JSX.Element {
               </div>
 
               {/* Custom Body */}
-              <div className="p-5 pt-[16px] px-0 flex flex-col gap-4">
+              <div className="p-5 pt-[16px] flex flex-col">
                 <div className="relative flex items-center">
                   <Search className="absolute left-3.5 h-4 w-4 text-[#A1A1AA] pointer-events-none" />
                   <input
@@ -587,22 +641,21 @@ export function Sidebar(): JSX.Element {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search a coin by name, symbol or mint"
                     className={cn(
-                      "w-full bg-[#18191B] border border-[#212225] text-[#FAFAFA] placeholder:text-[#A1A1AA]",
-                      "rounded-lg py-2.5 pl-11 pr-4 text-sm focus:outline-none focus:border-[#22C55E]/40 focus:ring-1 focus:ring-[#22C55E]/20 transition-all font-[Inter]",
+                      "w-full bg-[#18191b80] border border-[#ffffff1a] text-[#FAFAFA] placeholder:text-[#A1A1AA]",
+                      "rounded-xl py-0 pr-[12px] pl-[36px] h-[44px]  text-sm focus:outline-none focus:border-[#22C55E]/40 focus:ring-1 focus:ring-[#22C55E]/20 transition-all font-[Inter]",
                     )}
                     autoFocus
                   />
                 </div>
 
                 {!searchQuery ? (
-                  <div className="flex flex-col items-center justify-center pb-[80px]">
+                  <div className="flex flex-col items-center justify-center py-[36px]">
                     <span className="text-[14px] text-[#A1A1AA] font-[Inter]">
                       Start typing to find a coin.
                     </span>
                   </div>
                 ) : tokensQuery.isLoading ? (
                   <div className="flex flex-col items-center justify-center py-20 gap-2">
-                    <Loader2 className="h-6 w-6 text-[#22C55E] animate-spin" />
                     <span className="text-xs text-[#A1A1AA] font-[Inter]">
                       Searching...
                     </span>
@@ -656,7 +709,7 @@ export function Sidebar(): JSX.Element {
                   </div>
                 )}
               </div>
-            </>
+            </div>
           ) : (
             /* Pane 2: Confirm Callout */
             <>
@@ -775,12 +828,19 @@ export function Sidebar(): JSX.Element {
             </>
           )}
         </Modal>
+        <div
+          className={cn(
+            "fixed inset-0 z-[998] bg-black/20 backdrop-blur-sm transition-all duration-200",
+            goLiveModalOpen ? "opacity-100" : "opacity-0 pointer-events-none",
+          )}
+          onClick={() => setGoLiveModalOpen(false)}
+        />
         <Modal
           open={goLiveModalOpen}
           onClose={() => setGoLiveModalOpen(false)}
-          className="max-w-[600px] w-full bg-[#14151c] border border-[#272A2D] rounded-[22px] overflow-hidden p-0 shadow-2xl"
+          className="max-w-[600px] w-full bg-[#14151c]   border border-[#272A2D] rounded-[22px] overflow-hidden p-0 shadow-2xl"
         >
-          <div className="p-[4px] text-center flex flex-col gap-8 text-[#FAFAFA]">
+          <div className="p-[24px] text-center flex flex-col gap-8  text-[#FAFAFA]">
             <img src="/Images/Sidedrawer/start-livestream-no-coins.svg" />
             <div className="flex items-center flex-col">
               <h2 className="text-[20px] font-[Inter] text-text-on-muted leading-[1.75rem] font-semibold">
@@ -813,12 +873,18 @@ export function Sidebar(): JSX.Element {
             </div>
           </div>
         </Modal>
+        {tryAppModalOpen && (
+          <div
+            className="fixed inset-0 z-[998] bg-black/70 transition-all duration-200"
+            onClick={() => setTryAppModalOpen(false)}
+          />
+        )}
         <Modal
           open={tryAppModalOpen}
           onClose={() => setTryAppModalOpen(false)}
           className="max-w-[402px] h-[404px] w-full bg-[#111113] border rounded-[16px] border-[#212225] overflow-hidden p-[0px] shadow-2xl"
         >
-          <div className="p-[4px] flex items-center justify-center flex-col text-center text-[#FAFAFA]">
+          <div className="p-[24px] flex items-center justify-center flex-col text-center text-[#FAFAFA]">
             <h2 className="text-center text-[20px] leading-[1.75rem] font-semibold text-text-primary">
               Pump is faster on the app
             </h2>
