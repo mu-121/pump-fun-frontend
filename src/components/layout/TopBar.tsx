@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams,useLocation } from "react-router-dom";
 import { Menu, Mic, Plus, Search, Users, X } from "lucide-react";
 import { env } from "@/lib/env";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,7 @@ const PROMO_KEY = "pump-clone-promo-dismissed";
 
 export function TopBar(): JSX.Element {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const [query, setQuery] = useState(searchParams.get("search") ?? "");
   const [promoOpen, setPromoOpen] = useState(
@@ -85,6 +86,32 @@ export function TopBar(): JSX.Element {
 
             {/* Desktop search — hidden on lg and below */}
             <div className="flex items-center w-full max-w-[500px] max-lg:hidden gap-2">
+              {location.pathname !== "/" && (
+                <button
+                  type="button"
+                  aria-label="Go back"
+                  onClick={() => navigate(-1)}
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[#212225] transition-colors hover:bg-bg-tertiary/80"
+                >
+                  <svg
+                    className="text-foreground"
+                    aria-hidden="true"
+                    width="16px"
+                    height="16px"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M14.9998 20L7.70696 12.7071C7.31643 12.3166 7.31643 11.6834 7.70695 11.2929L14.9998 4"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                  </svg>
+                </button>
+              )}
               <form onSubmit={submitSearch} className="w-full">
                 <div
                   className="relative flex h-10 w-full items-center rounded-lg bg-surface-elevated border border-border transition-colors hover:bg-surface"
@@ -245,7 +272,7 @@ function VoiceChatPill(): JSX.Element {
           aria-label="Voice chat"
           onClick={() => setPopoverOpen((v) => !v)}
           className={cn(
-            "hidden lg:inline-flex items-center gap-2",
+            "hidden lg:inline-flex items-center gap-2 whitespace-nowrap",
             "h-10 px-4 rounded-lg border border-border bg-surface-elevated",
             "text-sm font-medium text-text-primary hover:bg-surface transition-colors",
           )}
@@ -271,13 +298,14 @@ function VoiceChatPill(): JSX.Element {
         {/* Notification badge */}
         {hasNotification && (
           <>
-            <div className="absolute -right-1.5 -top-1.5 z-50 pointer-events-none">
-              <span className="flex h-[22px] w-[22px] items-center justify-center rounded-full bg-bg-accent text-xs font-bold text-bg-primary shadow-sm">
+            <div className="absolute -right-2 -top-2 z-50">
+              {/* Ping / glow */}
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#86EFAC] opacity-40" />
+
+              {/* Badge */}
+              <span className="relative flex min-h-6 min-w-6 items-center justify-center rounded-full bg-[#86EFAC] px-1 py-0.5 text-xs font-bold text-[#0B0F0C] shadow-[0_0_10px_rgba(134,239,172,0.5)]">
                 5
               </span>
-            </div>
-            <div className="absolute -right-1.5 -top-1.5 z-40 pointer-events-none">
-              <span className="flex h-[22px] w-[22px] animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite] items-center justify-center rounded-full bg-bg-accent text-xs font-bold text-bg-primary shadow-sm"></span>
             </div>
           </>
         )}
@@ -771,21 +799,22 @@ function ProductUpdatesPill(): JSX.Element {
                     <div className="flex items-center gap-2">
                       {update.hasIcon && (
                         <svg
+                          class="text-primary size-3.5 shrink-0"
                           aria-hidden="true"
-                          width="14"
-                          height="14"
+                          width="24px"
+                          height="24px"
                           viewBox="0 0 24 24"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
-                          className="text-bg-accent shrink-0"
                         >
                           <path
-                            d="M14.0006 2C14.0006 2 14.1783 3.04001 14.0006 4C13.8091 5.03394 13.0006 6 13.0006 6M15.5006 8.5L16.5006 7.5M18.3006 4.75L18.7506 3.5M20.0006 8L21.0006 7.5M18.0006 11C18.0006 11 18.7567 11.032 19.5006 11.27C20.1711 11.4846 21.0006 12 21.0006 12M4.31211 20.9697L16.5238 16.5362C17.2117 16.2864 17.4071 15.4066 16.8897 14.8891L9.1115 7.11092C8.59401 6.59343 7.71417 6.78886 7.46442 7.47677L3.03088 19.6885C2.74126 20.4862 3.51438 21.2593 4.31211 20.9697Z"
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M21 12.5C14.75 12.5 12 15.4028 12 22C12 15.4028 9.25 12.5 3 12.5C9.25 12.5 12 9.59722 12 3C12 9.59722 14.75 12.5 21 12.5Z"
                             stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
+                            stroke-width="2"
+                            stroke-linejoin="round"
+                          ></path>
                         </svg>
                       )}
                       <span className="font-semibold text-[13px] text-text-primary">
@@ -793,7 +822,19 @@ function ProductUpdatesPill(): JSX.Element {
                       </span>
                     </div>
                     {update.isNew && (
-                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-bg-accent/20 text-bg-accent uppercase tracking-wide">
+                      <span
+                        className="
+    inline-flex items-center
+    text-[9px] font-bold uppercase tracking-wide
+    px-1.5 py-0.5 rounded
+    cursor-default
+    group relative
+    bg-gradient-to-br from-emerald-500/[0.18] to-transparent
+    ring-1 ring-inset ring-emerald-500/30
+    text-emerald-400
+    transition-colors
+  "
+                      >
                         New
                       </span>
                     )}

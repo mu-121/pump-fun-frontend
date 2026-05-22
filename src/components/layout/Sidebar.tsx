@@ -379,12 +379,12 @@ export function Sidebar(): JSX.Element {
                         "shrink-0 transition-all duration-200",
                         // Apply green filter only for icons without fill version
                         isActive &&
-                          label !== "Home" &&
-                          label !== "Live" &&
-                          label !== "Callouts" &&
-                          label !== "Terminal" &&
-                          label !== "Support" &&
-                          "icon-active-green",
+                        label !== "Home" &&
+                        label !== "Live" &&
+                        label !== "Callouts" &&
+                        label !== "Terminal" &&
+                        label !== "Support" &&
+                        "icon-active-green",
                       )}
                     />
                   ) : (
@@ -525,253 +525,200 @@ export function Sidebar(): JSX.Element {
           ) : null}
         </div>
 
-        <Modal
-          open={calloutModalOpen}
-          onClose={() => {
-            setCalloutModalOpen(false);
-            setSearchQuery("");
-            setSelectedToken(null);
-            setCalloutNote("");
-          }}
-          className="max-w-[558px] w-full bg-[#111113] border border-[#212225] overflow-hidden p-0 shadow-2xl"
-        >
-          {!selectedToken ? (
-            /* Pane 1: Search Coin */
-            <>
-              {/* Custom Header */}
-              <div className="bg-[#111113] border-b border-[#212225] pb-5 relative">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCalloutModalOpen(false);
-                    setSearchQuery("");
-                    setSelectedToken(null);
-                    setCalloutNote("");
-                  }}
-                  className="absolute top-[-4px] right-4 p-1 rounded-lg text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#18191B] transition-colors"
-                  aria-label="Close modal"
-                >
-                  <X className="h-4 w-4" />
-                </button>
+      <Modal open={calloutModalOpen} onClose={() => {
+  setCalloutModalOpen(false);
+  setSearchQuery("");
+  setSelectedToken(null);
+  setCalloutNote("");
+}}>
+  <div
+    role="dialog"
+    aria-modal="true"
+    className="fixed left-1/2 top-1/2 z-[999] w-full max-w-[min(560px,calc(100vw-32px))] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl border border-white/10 bg-bg-primary text-text-primary shadow-lg"
+  >
+    {/* ================= HEADER ================= */}
+    <div className="relative overflow-hidden border-b border-white/5">
+      {/* decorative gradients */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary-green/15 via-primary-green/5 to-transparent" />
+      <div className="pointer-events-none absolute -top-16 -right-16 size-40 rounded-full bg-primary-green/20 blur-3xl" />
 
-                <div className="flex gap-4">
-                  <div style={{ backgroundColor: 'rgba(132, 239, 172, 0.9)',   boxShadow: '0 6px 24px -10px rgba(132, 239, 172, 0.55)' }} className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-green/90 via-primary-green/70 to-primary-green/40 text-black shadow-[0_6px_24px_-10px_rgba(132,239,172,0.55)]">
-                    <img src="/Images/Sidedrawer/calloutmodel.svg" className="h-5 w-5 text-[#22C55E]" />
-                  </div>
+      <div className="relative flex items-start gap-3 px-5 py-5">
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-green/90 via-primary-green/70 to-primary-green/40 text-black shadow-[0_6px_24px_-10px_rgba(132,239,172,0.55)]">
+          <img
+            src="/Images/Sidedrawer/calloutmodel.svg"
+            className="size-5"
+            alt=""
+          />
+        </span>
 
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-medium text-[#A1A1AA] tracking-wider uppercase font-[Inter]">
-                      New Callout
-                    </span>
-                    <h2 className="text-[16px] font-semibold text-[#FAFAFA] mt-0.5 font-[Inter]">
-                      Make a public bullish call
-                    </h2>
-                    <p className="text-[12px] text-[#A1A1AA] mt-1.5 leading-[1.625rem] font-[Inter]">
-                      Pin your call to the current market cap. We'll track the
-                      multiple forward so your conviction is on record.
-                    </p>
-                  </div>
-                </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-col space-y-1">
+            <p className="text-[10px] font-medium uppercase tracking-[0.12em] text-text-tertiary">
+              New callout
+            </p>
+            <h2 className="text-base font-semibold leading-tight text-text-primary">
+              {!selectedToken
+                ? "Make a public bullish call"
+                : "Publish your callout"}
+            </h2>
+          </div>
+
+          <p className="mt-1 text-xs leading-relaxed text-text-tertiary">
+            {!selectedToken
+              ? "Pin your call to the current market cap. We'll track the multiple forward so your conviction is on record."
+              : `Confirm your bullish call on ${selectedToken.name} ($${selectedToken.symbol}) at its current valuation.`}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    {/* ================= BODY ================= */}
+    <div className="flex max-h-[min(70vh,560px)] flex-col px-5 pt-4 pb-5">
+      {!selectedToken ? (
+        <>
+          {/* Search Input */}
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-text-tertiary" />
+            <input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search a coin by name, symbol or mint"
+              className="h-11 w-full rounded-xl border border-white/10 bg-bg-secondary/50 pl-9 pr-3 text-sm text-text-primary placeholder:text-text-tertiary focus:border-white/30 focus:outline-none"
+              autoFocus
+            />
+          </div>
+
+          {/* Results */}
+          <div className="mt-3 flex min-h-[240px] flex-1 flex-col gap-1 overflow-y-auto">
+            {!searchQuery ? (
+              <p className="py-8 text-center text-sm text-text-tertiary">
+                Start typing to find a coin.
+              </p>
+            ) : tokensQuery.isLoading ? (
+              <div className="flex flex-col items-center justify-center py-12 gap-2">
+                <Loader2 className="size-5 animate-spin text-primary-green" />
+                <span className="text-xs text-text-tertiary">Searching…</span>
               </div>
-
-              {/* Custom Body */}
-              <div className="p-5 pt-[16px] px-0 flex flex-col gap-4">
-                <div className="relative flex items-center">
-                  <Search className="absolute left-3.5 h-4 w-4 text-[#A1A1AA] pointer-events-none" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search a coin by name, symbol or mint"
-                    className={cn(
-                      "w-full bg-[#18191B] border border-[#212225] text-[#FAFAFA] placeholder:text-[#A1A1AA]",
-                      "rounded-lg py-2.5 pl-11 pr-4 text-sm focus:outline-none focus:border-[#22C55E]/40 focus:ring-1 focus:ring-[#22C55E]/20 transition-all font-[Inter]",
-                    )}
-                    autoFocus
-                  />
-                </div>
-
-                {!searchQuery ? (
-                  <div className="flex flex-col items-center justify-center pb-[80px]">
-                    <span className="text-[14px] text-[#A1A1AA] font-[Inter]">
-                      Start typing to find a coin.
-                    </span>
-                  </div>
-                ) : tokensQuery.isLoading ? (
-                  <div className="flex flex-col items-center justify-center py-20 gap-2">
-                    <Loader2 className="h-6 w-6 text-[#22C55E] animate-spin" />
-                    <span className="text-xs text-[#A1A1AA] font-[Inter]">
-                      Searching...
-                    </span>
-                  </div>
-                ) : tokenItems.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-20">
-                    <span className="text-sm text-[#A1A1AA] font-[Inter]">
-                      No coins found matching "{searchQuery}"
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex flex-col max-h-[250px] overflow-y-auto border border-[#212225] rounded-lg divide-y divide-[#212225] bg-[#18191B]/50">
-                    {tokenItems.map((token) => (
-                      <button
-                        key={token.id}
-                        type="button"
-                        onClick={() => setSelectedToken(token)}
-                        className="w-full flex items-center justify-between p-3 hover:bg-[#18191B] transition-colors text-left"
-                      >
-                        <div className="flex items-center gap-3">
-                          {token.imageUrl ? (
-                            <img
-                              src={token.imageUrl}
-                              alt={token.name}
-                              className="h-8 w-8 rounded-lg object-cover"
-                            />
-                          ) : (
-                            <span className="grid place-items-center h-8 w-8 rounded-lg bg-surface-elevated text-sm border border-border">
-                              🪙
-                            </span>
-                          )}
-                          <div className="flex flex-col">
-                            <span className="text-sm font-semibold text-[#FAFAFA] font-[Inter] leading-tight">
-                              {token.name}
-                            </span>
-                            <span className="text-xs text-[#A1A1AA] font-mono leading-tight mt-0.5">
-                              ${token.symbol}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="flex flex-col items-end">
-                          <span className="text-xs text-[#A1A1AA] font-[Inter]">
-                            Market Cap
-                          </span>
-                          <span className="text-xs font-mono font-medium text-[#22C55E] mt-0.5">
-                            {formatMcap(token.marketCapUsd)}
-                          </span>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </>
-          ) : (
-            /* Pane 2: Confirm Callout */
-            <>
-              {/* Custom Header */}
-              <div className="bg-[#0B150F] border-b border-[#212225] p-5 relative">
+            ) : tokenItems.length === 0 ? (
+              <p className="py-8 text-center text-sm text-text-tertiary">
+                No coins found
+              </p>
+            ) : (
+              tokenItems.map((token) => (
                 <button
-                  type="button"
-                  onClick={() => setSelectedToken(null)}
-                  className="absolute top-4 left-4 p-1 rounded-md text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#18191B] transition-colors flex items-center gap-1 text-xs"
+                  key={token.id}
+                  onClick={() => setSelectedToken(token)}
+                  className="flex items-center justify-between rounded-xl px-3 py-2 hover:bg-bg-secondary transition-colors text-left"
                 >
-                  <ArrowLeft className="h-4 w-4" />
-                  <span>Back</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCalloutModalOpen(false);
-                    setSearchQuery("");
-                    setSelectedToken(null);
-                    setCalloutNote("");
-                  }}
-                  className="absolute top-4 right-4 p-1 rounded-md text-[#A1A1AA] hover:text-[#FAFAFA] hover:bg-[#18191B] transition-colors"
-                  aria-label="Close modal"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-
-                <div className="mt-8 flex gap-4">
-                  <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-[#22C55E]/15 shrink-0">
-                    <Megaphone className="h-5 w-5 text-[#22C55E]" />
-                  </div>
-
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-bold text-[#22C55E] tracking-wider uppercase font-[Inter]">
-                      Confirm Callout
-                    </span>
-                    <h2 className="text-lg font-bold text-[#FAFAFA] mt-0.5 font-[Inter]">
-                      Publish your callout
-                    </h2>
-                    <p className="text-xs text-[#A1A1AA] mt-1.5 leading-normal font-[Inter]">
-                      Confirm your bullish call on {selectedToken.name} ($
-                      {selectedToken.symbol}) at its current valuation.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Custom Body */}
-              <div className="p-5 flex flex-col gap-4">
-                <div className="flex items-center justify-between p-3.5 bg-[#18191B] border border-[#212225] rounded-xl">
                   <div className="flex items-center gap-3">
-                    {selectedToken.imageUrl ? (
+                    {token.imageUrl ? (
                       <img
-                        src={selectedToken.imageUrl}
-                        alt={selectedToken.name}
-                        className="h-10 w-10 rounded-lg object-cover"
+                        src={token.imageUrl}
+                        className="size-8 rounded-lg object-cover"
+                        alt=""
                       />
                     ) : (
-                      <span className="grid place-items-center h-10 w-10 rounded-lg bg-surface-elevated text-lg border border-border">
+                      <span className="grid size-8 place-items-center rounded-lg bg-bg-secondary">
                         🪙
                       </span>
                     )}
+
                     <div className="flex flex-col">
-                      <span className="text-sm font-bold text-[#FAFAFA] font-[Inter]">
-                        {selectedToken.name}
+                      <span className="text-sm font-semibold">
+                        {token.name}
                       </span>
-                      <span className="text-xs text-[#A1A1AA] font-mono mt-0.5">
-                        ${selectedToken.symbol}
+                      <span className="text-xs text-text-tertiary font-mono">
+                        ${token.symbol}
                       </span>
                     </div>
                   </div>
+
                   <div className="flex flex-col items-end">
-                    <span className="text-xs text-[#A1A1AA] font-[Inter]">
-                      Current Mcap
+                    <span className="text-xs text-text-tertiary">
+                      Market Cap
                     </span>
-                    <span className="text-sm font-mono font-bold text-[#22C55E] mt-0.5">
-                      {formatMcap(selectedToken.marketCapUsd)}
+                    <span className="text-xs font-mono text-primary-green">
+                      {formatMcap(token.marketCapUsd)}
                     </span>
                   </div>
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-[#A1A1AA] font-[Inter]">
-                    Optional Note
-                  </label>
-                  <textarea
-                    value={calloutNote}
-                    onChange={(e) => setCalloutNote(e.target.value)}
-                    placeholder="e.g. this one's heading to $50M, mark it"
-                    className={cn(
-                      "w-full bg-[#18191B] border border-[#212225] text-[#FAFAFA] placeholder:text-[#A1A1AA]",
-                      "rounded-lg p-3 text-sm focus:outline-none focus:border-[#22C55E]/40 focus:ring-1 focus:ring-[#22C55E]/20 transition-all font-[Inter] h-20 resize-none",
-                    )}
-                  />
-                </div>
-
-                <Button
-                  variant="primary"
-                  onClick={() => {
-                    toast.success(
-                      `Callout for $${selectedToken.symbol} published!`,
-                    );
-                    setCalloutModalOpen(false);
-                    setSearchQuery("");
-                    setSelectedToken(null);
-                    setCalloutNote("");
-                  }}
-                  fullWidth
-                  size="lg"
-                  className="font-[Inter] bg-[#22C55E] text-[#111113] hover:bg-[#22C55E]/80 transition-colors"
-                >
-                  Publish call
-                </Button>
+                </button>
+              ))
+            )}
+          </div>
+        </>
+      ) : (
+        <>
+          {/* Selected Token Card */}
+          <div className="flex items-center justify-between rounded-xl border border-white/10 bg-bg-secondary/50 p-3">
+            <div className="flex items-center gap-3">
+              <img
+                src={selectedToken.imageUrl}
+                className="size-10 rounded-lg"
+                alt=""
+              />
+              <div>
+                <p className="text-sm font-semibold">
+                  {selectedToken.name}
+                </p>
+                <p className="text-xs text-text-tertiary font-mono">
+                  ${selectedToken.symbol}
+                </p>
               </div>
-            </>
-          )}
-        </Modal>
+            </div>
+
+            <div className="text-right">
+              <p className="text-xs text-text-tertiary">Current Mcap</p>
+              <p className="text-sm font-mono font-semibold text-primary-green">
+                {formatMcap(selectedToken.marketCapUsd)}
+              </p>
+            </div>
+          </div>
+
+          {/* Note */}
+          <div className="mt-4">
+            <label className="text-xs font-medium text-text-tertiary">
+              Optional note
+            </label>
+            <textarea
+              value={calloutNote}
+              onChange={(e) => setCalloutNote(e.target.value)}
+              placeholder="e.g. this one's heading to $50M, mark it"
+              className="mt-1 h-20 w-full resize-none rounded-xl border border-white/10 bg-bg-secondary/50 p-3 text-sm text-text-primary placeholder:text-text-tertiary focus:border-white/30 focus:outline-none"
+            />
+          </div>
+
+          <Button
+            onClick={() => {
+              toast.success(`Callout for $${selectedToken.symbol} published!`);
+              setCalloutModalOpen(false);
+              setSearchQuery("");
+              setSelectedToken(null);
+              setCalloutNote("");
+            }}
+            className="mt-4 w-full bg-primary-green text-black hover:bg-primary-green/80"
+            size="lg"
+          >
+            Publish call
+          </Button>
+        </>
+      )}
+    </div>
+
+    {/* ================= CLOSE ================= */}
+    <button
+      onClick={() => {
+        setCalloutModalOpen(false);
+        setSearchQuery("");
+        setSelectedToken(null);
+        setCalloutNote("");
+      }}
+      className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-white/20 focus:ring-offset-2"
+      aria-label="Close"
+    >
+      <X className="h-4 w-4" />
+    </button>
+  </div>
+</Modal>
         <Modal
           open={goLiveModalOpen}
           onClose={() => setGoLiveModalOpen(false)}
@@ -1364,9 +1311,9 @@ function HoldingsDrawer(): JSX.Element {
                         {sol.lamports == null
                           ? "—"
                           : formatSol(sol.lamports, {
-                              withUnit: false,
-                              fractionDigits: 4,
-                            })}
+                            withUnit: false,
+                            fractionDigits: 4,
+                          })}
                       </span>
                     </div>
                   )}
