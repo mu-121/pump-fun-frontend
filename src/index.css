@@ -35,6 +35,22 @@
     src: url('/fonts/Inter/static/Inter_18pt-Bold.ttf') format('truetype');
   }
 
+  @font-face {
+    font-family: 'Museo Sans';
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    src: url('/fonts/Museo%20Sans%20700/MuseoSans_700.otf') format('opentype');
+  }
+
+  @font-face {
+    font-family: 'Museo_Sans';
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    src: url('/fonts/Museo%20Sans%20700/MuseoSans_700.otf') format('opentype');
+  }
+
   :root {
     color-scheme: dark;
   }

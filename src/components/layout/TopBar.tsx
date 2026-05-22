@@ -30,148 +30,247 @@ export function TopBar(): JSX.Element {
   };
 
   return (
-    <header className="flex flex-col sticky top-0 left-0 z-20 bg-bg-primary border-b border-border-secondary">
-      {promoOpen ? (
-        <div className="flex items-center justify-center gap-2 px-4 py-2 text-xs bg-surface border-b border-border text-text-muted">
-          <a
-            className="text-[14px] font-medium text-[#FAFAFA] truncate hover:underline"
-            href="https://app.pump.fun/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Trade faster. Pump is better on mobile.
-          </a>
-          <button
+    <> {promoOpen ? (
+      <div
+        className="
+        h-[69.6px]
+    w-full
+    grid
+    bg-[rgb(15,15,18)]
+    fixed
+    top-0
+    left-0
+    right-0
+    leading-[1em]
+    z-[10000]
+  "
+      >
+        <div className="grid grid-cols-[9%_61%_30%] items-center text-xs bg-surface text-text-muted">
+
+          <div className='flex items-center justify-center w-full'>  <button
             type="button"
             onClick={() => {
               localStorage.setItem(PROMO_KEY, '1');
               setPromoOpen(false);
             }}
-            className="p-1 rounded hover:bg-surface-elevated text-text-muted hover:text-text-primary"
+            className="hover:bg-surface-elevated text-text-muted hover:text-text-primary w-[21.6px]
+    h-[21.6px]
+    p-[0.2em]
+    rounded-full
+    bg-[rgba(219,219,233,0.4)]
+    flex
+    items-center
+    justify-center"
             aria-label="Dismiss"
           >
-            <X className="h-3.5 w-3.5" />
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M6 6L18 18M18 6L6 18"
+                stroke="rgba(2,2,2,1)"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
           </button>
-        </div>
-      ) : null}
+          </div>
+          <div className='flex items-center'>
+            <img src='/Images/FirstPopup/logoPumpFun.webp' alt="Pump Fun Logo" className="h-[45px] w-[45px]" />
 
-      {/* ── Main nav row — 68 px tall, 3-column layout matching pump.fun ── */}
-      <div className="flex items-center px-4 lg:px-6 h-[68px] w-full">
-        <div className="flex items-center justify-between w-full h-full gap-x-3">
-
-          {/* LEFT: mobile logo + desktop search */}
-          <div className="flex items-center justify-start h-full grow-[2] basis-0 gap-x-3 min-w-0 max-lg:basis-auto">
-
-            {/* Mobile logo — hidden on md+ */}
-            <Link
-              to="/"
-              className="items-center justify-center shrink-0 hidden max-md:flex"
-              aria-label="Home"
+            <a
+              className="text-[18px] font-bold  font-['Museo_Sans'] max-[430px]:text-[14px] text-[#FAFAFA]  hover:underline ml-[12px] max-[400px]:ml-[6px] leading-[120%] "
+              href="https://app.pump.fun/"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <span className="font-bold text-sm text-text-primary">{env.platformName}</span>
-            </Link>
+              Trade faster on the pump app
+            </a>
 
-            {/* Mobile hamburger */}
-            <button
-              type="button"
-              onClick={() => openMobileSidebar(true)}
-              aria-label="Open navigation"
-              className="lg:hidden p-2 rounded-lg border border-border bg-surface-elevated text-text-muted hover:text-text-primary hover:bg-surface transition-colors"
-            >
-              <Menu className="h-5 w-5" />
-            </button>
+          </div>
+          <div className="mt-[1em] mr-[1em] ml-0 mb-0">
+            <div className="flex justify-center items-center w-full">
+              <div
+                className="
+        inline-flex
+        items-center
+        justify-center
+        w-full
+        h-[3.7em]
 
-            {/* Desktop search — hidden on lg and below */}
-            <div className="flex items-center w-full max-w-[500px] max-lg:hidden gap-2">
-              <form onSubmit={submitSearch} className="w-full">
-                <div
-                  className="relative flex h-10 w-full items-center rounded-lg bg-surface-elevated border border-border transition-colors hover:bg-surface"
-                  role="search"
+        rounded-[0.7em]
+        border
+        border-solid
+        border-[rgba(255,255,255,0)]
+
+        bg-[rgba(134,239,172,1)]
+        shadow-none
+      "
+              >
+                <button
+                  type="button"
+                  data-role="cta"
+                  data-qa-id="cta-button"
+                  data-af-cta-button="true"
+                  onClick={() => {
+                    window.open(
+                      "https://pumpfun.onelink.me/HSag?creative_id=2cb5f986-ef40-45f1-86ca-8e7afd35e158&af_banner=true&af_channel=af_web_banner&pid=web_retail&c=app_banner&af_adset=app_banner_2025_10&af_ad=smart_banner&af_sub1=xp_23ay4e&af_web_dp=https://app.pump.fun&af_sub2=placement:home_top&af_banner_build=static&af_banner_config=forward_utm&af_banner_sdk_ver=2",
+                      "_blank"
+                    );
+                  }}
+                  className="
+          h-full
+          w-full
+          mx-[0.7em]
+          p-0
+
+          bg-transparent
+          border-transparent
+
+          text-[1.3em]
+          leading-[1em]
+          font-bold
+          normal-case
+          break-words
+
+          text-[rgba(15,15,18,1)]
+          font-['Museo_Sans']
+        "
                 >
-                  <Search className="absolute left-3 shrink-0 h-[18px] w-[18px] text-text-muted pointer-events-none" aria-hidden />
-                  <input
-                    type="search"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search for coins..."
-                    className={cn(
-                      'h-full w-full min-w-0 bg-transparent pl-10 pr-20',
-                      'text-sm text-text-primary placeholder:text-text-muted',
-                      'focus:outline-none',
-                    )}
-                  />
-                  <div className="absolute right-3 hidden gap-1 sm:flex pointer-events-none">
-                    <kbd className="inline-flex items-center justify-center h-5 min-w-5 rounded-sm border border-border bg-surface px-1 font-sans text-[11px] font-medium text-text-muted">⌘</kbd>
-                    <kbd className="inline-flex items-center justify-center h-5 min-w-5 rounded-sm border border-border bg-surface px-1 font-sans text-[11px] font-medium text-text-muted">K</kbd>
-                  </div>
-                </div>
-              </form>
+                  Install
+                </button>
+              </div>
             </div>
           </div>
+        </div>
+      </div>
+    ) : null}
+      <header className="flex flex-col sticky top-0 left-0 z-20 bg-bg-primary border-b border-border-secondary">
 
-          {/* RIGHT: action buttons */}
-          <div className="flex items-center justify-end h-full grow-[1] basis-0 gap-x-3 min-w-0 max-lg:grow-0 max-lg:basis-auto">
 
-            {/* Mobile search icon — hidden on lg+ */}
-            <button
-              type="button"
-              onClick={() => {
-                const params = new URLSearchParams(searchParams);
-                navigate({ pathname: '/', search: params.toString() });
-              }}
-              aria-label="Search"
-              className={cn(
-                'hidden max-lg:grid place-items-center',
-                'h-10 w-10 rounded-lg border border-border bg-surface-elevated',
-                'text-text-muted hover:text-text-primary transition-colors',
-              )}
-            >
-              <Search className="h-5 w-5" aria-hidden />
-            </button>
+        {/* ── Main nav row — 68 px tall, 3-column layout matching pump.fun ── */}
+        <div className="flex items-center px-4 lg:px-6 h-[68px] w-full">
+          <div className="flex items-center justify-between w-full h-full gap-x-3">
 
-            {/* Product Updates */}
-            <ProductUpdatesPill />
+            {/* LEFT: mobile logo + desktop search */}
+            <div className="flex items-center justify-start h-full grow-[2] basis-0 gap-x-3 min-w-0 max-lg:basis-auto">
 
-            {/* Voice chat */}
-            <VoiceChatPill />
-
-            {/* Create — label on lg+, icon-only below */}
-            <Link to="/create" className="max-[480px]:hidden">
-              {/* Desktop label */}
-              <button
-                type="button"
-                className={cn(
-                  'hidden lg:inline-flex items-center gap-2',
-                  'h-10 px-4 rounded-lg border border-border bg-surface-elevated',
-                  'text-[14px] font-medium text-text-primary hover:bg-surface transition-colors',
-                )}
+              {/* Mobile logo — hidden on md+ */}
+              <Link
+                to="/"
+                className="items-center justify-center shrink-0 hidden max-md:flex"
+                aria-label="Home"
               >
-                <Plus className="h-5 w-5" aria-hidden />
-                <span>Create</span>
-              </button>
-              {/* Mobile icon-only */}
+                <span className="font-bold text-sm text-text-primary">{env.platformName}</span>
+              </Link>
+
+              {/* Mobile hamburger */}
               <button
                 type="button"
-                aria-label="Create"
+                onClick={() => openMobileSidebar(true)}
+                aria-label="Open navigation"
+                className="lg:hidden p-2 rounded-lg border border-border bg-surface-elevated text-text-muted hover:text-text-primary hover:bg-surface transition-colors"
+              >
+                <Menu className="h-5 w-5" />
+              </button>
+
+              {/* Desktop search — hidden on lg and below */}
+              <div className="flex items-center w-full max-w-[500px] max-lg:hidden gap-2">
+                <form onSubmit={submitSearch} className="w-full">
+                  <div
+                    className="relative flex h-10 w-full items-center rounded-lg bg-surface-elevated border border-border transition-colors hover:bg-surface"
+                    role="search"
+                  >
+                    <Search className="absolute left-3 shrink-0 h-[18px] w-[18px] text-text-muted pointer-events-none" aria-hidden />
+                    <input
+                      type="search"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      placeholder="Search for coins..."
+                      className={cn(
+                        'h-full w-full min-w-0 bg-transparent pl-10 pr-20',
+                        'text-sm text-text-primary placeholder:text-text-muted',
+                        'focus:outline-none',
+                      )}
+                    />
+                    <div className="absolute right-3 hidden gap-1 sm:flex pointer-events-none">
+                      <kbd className="inline-flex items-center justify-center h-5 min-w-5 rounded-sm border border-border bg-surface px-1 font-sans text-[11px] font-medium text-text-muted">⌘</kbd>
+                      <kbd className="inline-flex items-center justify-center h-5 min-w-5 rounded-sm border border-border bg-surface px-1 font-sans text-[11px] font-medium text-text-muted">K</kbd>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            {/* RIGHT: action buttons */}
+            <div className="flex items-center justify-end h-full grow-[1] basis-0 gap-x-3 min-w-0 max-lg:grow-0 max-lg:basis-auto">
+
+              {/* Mobile search icon — hidden on lg+ */}
+              <button
+                type="button"
+                onClick={() => {
+                  const params = new URLSearchParams(searchParams);
+                  navigate({ pathname: '/', search: params.toString() });
+                }}
+                aria-label="Search"
                 className={cn(
-                  'lg:hidden grid place-items-center',
+                  'hidden max-lg:grid place-items-center',
                   'h-10 w-10 rounded-lg border border-border bg-surface-elevated',
                   'text-text-muted hover:text-text-primary transition-colors',
                 )}
               >
-                <Plus className="h-5 w-5" aria-hidden />
+                <Search className="h-5 w-5" aria-hidden />
               </button>
-            </Link>
 
-            {/* Balance Dropdown */}
-            <BalanceMenu />
+              {/* Product Updates */}
+              <ProductUpdatesPill />
 
-            {/* Wallet / sign-in */}
-            <WalletMenu />
+              {/* Voice chat */}
+              <VoiceChatPill />
+
+              {/* Create — label on lg+, icon-only below */}
+              <Link to="/create" className="max-[480px]:hidden">
+                {/* Desktop label */}
+                <button
+                  type="button"
+                  className={cn(
+                    'hidden lg:inline-flex items-center gap-2',
+                    'h-10 px-4 rounded-lg border border-border bg-surface-elevated',
+                    'text-[14px] font-medium text-text-primary hover:bg-surface transition-colors',
+                  )}
+                >
+                  <Plus className="h-5 w-5" aria-hidden />
+                  <span>Create</span>
+                </button>
+                {/* Mobile icon-only */}
+                <button
+                  type="button"
+                  aria-label="Create"
+                  className={cn(
+                    'lg:hidden grid place-items-center',
+                    'h-10 w-10 rounded-lg border border-border bg-surface-elevated',
+                    'text-text-muted hover:text-text-primary transition-colors',
+                  )}
+                >
+                  <Plus className="h-5 w-5" aria-hidden />
+                </button>
+              </Link>
+
+              {/* Balance Dropdown */}
+              <BalanceMenu />
+
+              {/* Wallet / sign-in */}
+              <WalletMenu />
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </>
   );
 }
 
@@ -186,9 +285,9 @@ interface Room {
 }
 
 const GENERAL_ROOMS: Room[] = [
-  { id: 'g1', name: 'General 1', current: 8,  max: 50 },
-  { id: 'g2', name: 'General 2', current: 1,  max: 50 },
-  { id: 'g3', name: 'General 3', current: 0,  max: 50 },
+  { id: 'g1', name: 'General 1', current: 8, max: 50 },
+  { id: 'g2', name: 'General 2', current: 1, max: 50 },
+  { id: 'g3', name: 'General 3', current: 0, max: 50 },
 ];
 
 const SQUAD_ROOMS: Room[] = [
@@ -272,84 +371,84 @@ function VoiceChatPill(): JSX.Element {
         )}
 
         {/* ── Popover ── */}
-{popoverOpen && (
-  <>
-    {/* BACKDROP LAYER (fixes your issue) */}
-    <div
-      className="fixed inset-0 z-[999] bg-black/40 backdrop-blur-sm"
-      onClick={() => setPopoverOpen(false)}
-    />
+        {popoverOpen && (
+          <>
+            {/* BACKDROP LAYER (fixes your issue) */}
+            <div
+              className="fixed inset-0 z-[999] bg-black/40 backdrop-blur-sm"
+              onClick={() => setPopoverOpen(false)}
+            />
 
-    {/* POPOVER */}
-    <div
-      role="dialog"
-      className={cn(
-        "absolute right-0 top-[calc(100%+8px)] z-[1000]",
-        "w-[320px] overflow-hidden rounded-lg",
-        "border border-border-tertiary bg-[#18191B] shadow-md outline-none"
-      )}
-    >
-      {/* Header */}
-      <div className="flex items-center gap-2 border-b border-border-tertiary px-4 py-3">
-        <Mic className="h-5 w-5 text-text-primary" />
-        <h3 className="font-semibold text-text-primary">Voice chats</h3>
-        <span className="ml-auto text-xs text-text-tertiary">
-          {totalRooms} rooms
-        </span>
-      </div>
+            {/* POPOVER */}
+            <div
+              role="dialog"
+              className={cn(
+                "absolute right-0 top-[calc(100%+8px)] z-[1000]",
+                "w-[320px] overflow-hidden rounded-lg",
+                "border border-border-tertiary bg-[#18191B] shadow-md outline-none"
+              )}
+            >
+              {/* Header */}
+              <div className="flex items-center gap-2 border-b border-border-tertiary px-4 py-3">
+                <Mic className="h-5 w-5 text-text-primary" />
+                <h3 className="font-semibold text-text-primary">Voice chats</h3>
+                <span className="ml-auto text-xs text-text-tertiary">
+                  {totalRooms} rooms
+                </span>
+              </div>
 
-      {/* CONTENT */}
-      <div className="flex max-h-[320px] flex-col overflow-y-auto p-2">
-        {/* General */}
-        <div className="flex flex-col">
-          <div className="flex items-center gap-x-2 px-2 py-1.5">
-            <Mic className="h-3.5 w-3.5 text-text-tertiary" />
-            <span className="text-[11px] font-semibold uppercase text-text-tertiary">
-              General
-            </span>
-          </div>
+              {/* CONTENT */}
+              <div className="flex max-h-[320px] flex-col overflow-y-auto p-2">
+                {/* General */}
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-x-2 px-2 py-1.5">
+                    <Mic className="h-3.5 w-3.5 text-text-tertiary" />
+                    <span className="text-[11px] font-semibold uppercase text-text-tertiary">
+                      General
+                    </span>
+                  </div>
 
-          <div className="flex flex-col gap-0.5">
-            {GENERAL_ROOMS.map((room) => (
-              <RoomButton
-                key={room.id}
-                room={room}
-                onClick={() => handleRoomClick(room)}
-              />
-            ))}
-          </div>
-        </div>
+                  <div className="flex flex-col gap-0.5">
+                    {GENERAL_ROOMS.map((room) => (
+                      <RoomButton
+                        key={room.id}
+                        room={room}
+                        onClick={() => handleRoomClick(room)}
+                      />
+                    ))}
+                  </div>
+                </div>
 
-        {/* Squad */}
-        <div className="border-t border-border-tertiary pt-3">
-          <div className="flex items-center gap-x-2 px-2 py-1.5">
-            <Users className="h-3.5 w-3.5 text-text-tertiary" />
-            <span className="text-[11px] font-semibold uppercase text-text-tertiary">
-              Squad
-            </span>
-          </div>
+                {/* Squad */}
+                <div className="border-t border-border-tertiary pt-3">
+                  <div className="flex items-center gap-x-2 px-2 py-1.5">
+                    <Users className="h-3.5 w-3.5 text-text-tertiary" />
+                    <span className="text-[11px] font-semibold uppercase text-text-tertiary">
+                      Squad
+                    </span>
+                  </div>
 
-          <div className="flex flex-col gap-0.5">
-            {SQUAD_ROOMS.map((room) => (
-              <RoomButton
-                key={room.id}
-                room={room}
-                onClick={() => handleRoomClick(room)}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
+                  <div className="flex flex-col gap-0.5">
+                    {SQUAD_ROOMS.map((room) => (
+                      <RoomButton
+                        key={room.id}
+                        room={room}
+                        onClick={() => handleRoomClick(room)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
 
-      {/* FOOTER */}
-      <div className="border-t border-border-tertiary px-4 py-2.5">
-        <p className="text-center text-xs text-text-tertiary">
-          Join a room to start talking with others
-        </p>
-      </div>
-    </div>
-  </>
-)}
+              {/* FOOTER */}
+              <div className="border-t border-border-tertiary px-4 py-2.5">
+                <p className="text-center text-xs text-text-tertiary">
+                  Join a room to start talking with others
+                </p>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* ── Profile Claim Modal ── */}
@@ -665,16 +764,16 @@ function ProductUpdatesPill(): JSX.Element {
             {/* Content List */}
             <div className="flex max-h-[400px] flex-col overflow-y-auto p-2 gap-1">
               {PRODUCT_UPDATES.map((update) => (
-               <div
-  key={update.id}
-  className={cn(
-    "flex flex-col gap-1 rounded-lg px-3 py-2.5 transition-colors overflow-hidden cursor-pointer",
+                <div
+                  key={update.id}
+                  className={cn(
+                    "flex flex-col gap-1 rounded-lg px-3 py-2.5 transition-colors overflow-hidden cursor-pointer",
 
-    update.isSelected
-      ? "group relative bg-gradient-to-br from-primary/[0.10] to-transparent ring-1 ring-inset ring-primary/25 hover:from-primary/[0.14]"
-      : "border-transparent hover:bg-white/5"
-  )}
->
+                    update.isSelected
+                      ? "group relative bg-gradient-to-br from-primary/[0.10] to-transparent ring-1 ring-inset ring-primary/25 hover:from-primary/[0.14]"
+                      : "border-transparent hover:bg-white/5"
+                  )}
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       {update.hasIcon && (

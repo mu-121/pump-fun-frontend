@@ -50,6 +50,7 @@ const config: Config = {
           'Menlo',
           'monospace',
         ],
+        museo: ['Museo Sans', 'Museo_Sans', 'sans-serif'],
       },
       fontSize: {
         xs: ['0.75rem', { lineHeight: '1rem' }],
