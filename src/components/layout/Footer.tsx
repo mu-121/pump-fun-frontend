@@ -305,9 +305,9 @@ export function Footer(): JSX.Element {
 
           {/* centre – nav */}
           <nav aria-label="Footer" className="footer-nav">
-            <Link to="/coins" className="footer-link">
-              Top coins
-            </Link>
+        <a href="https://pump.fun/coins" className="footer-link">
+  Top coins
+</a>
 
             <a
               href="https://medium.com/@pumpdotfun_"
