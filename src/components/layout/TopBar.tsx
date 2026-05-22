@@ -78,6 +78,7 @@ export function TopBar(): JSX.Element {
         </div>
       ) : null}
 
+
       {/* ── Main nav row — 68 px tall, 3-column layout matching pump.fun ── */}
       <div className="flex items-center px-4 lg:px-6 h-[68px] w-full">
         <div className="flex items-center justify-between w-full h-full gap-x-3">
