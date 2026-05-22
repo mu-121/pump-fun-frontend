@@ -182,33 +182,8 @@ export function TopBar(): JSX.Element {
             {/* Voice chat */}
             <VoiceChatPill />
 
-            {/* Create — label on lg+, icon-only below */}
-            <Link to="/create" className="max-[480px]:hidden">
-              {/* Desktop label */}
-              <button
-                type="button"
-                className={cn(
-                  "hidden lg:inline-flex items-center gap-2",
-                  "h-10 px-4 rounded-lg border border-border bg-surface-elevated",
-                  "text-[14px] font-medium text-text-primary hover:bg-surface transition-colors",
-                )}
-              >
-                <Plus className="h-5 w-5" aria-hidden />
-                <span>Create</span>
-              </button>
-              {/* Mobile icon-only */}
-              <button
-                type="button"
-                aria-label="Create"
-                className={cn(
-                  "lg:hidden grid place-items-center",
-                  "h-10 w-10 rounded-lg border border-border bg-surface-elevated",
-                  "text-text-muted hover:text-text-primary transition-colors",
-                )}
-              >
-                <Plus className="h-5 w-5" aria-hidden />
-              </button>
-            </Link>
+            {/* Create dropdown — same menu as sidebar */}
+            <CreateMenuButton />
 
             {/* Balance Dropdown */}
             <BalanceMenu />
@@ -224,8 +199,106 @@ export function TopBar(): JSX.Element {
 }
 
 /* ─────────────────────────────────────────────
-   Data
+   CreateMenuButton — mirrors the Sidebar's Create dropdown
 ───────────────────────────────────────────── */
+function CreateMenuButton(): JSX.Element {
+  const navigate = useNavigate();
+  const setCalloutModalOpen = useUiStore((s) => s.setCalloutModalOpen);
+  const setGoLiveModalOpen = useUiStore((s) => s.setGoLiveModalOpen);
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  /* close on outside click */
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  /* close on Escape */
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [open]);
+
+  return (
+    <div ref={ref} className="relative max-[480px]:hidden">
+      {/* Desktop label */}
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className={cn(
+          "hidden lg:inline-flex items-center gap-2",
+          "h-10 px-4 rounded-lg border border-border bg-surface-elevated",
+          "text-[14px] font-medium text-text-primary hover:bg-surface transition-colors",
+        )}
+      >
+        <Plus className="h-5 w-5" aria-hidden />
+        <span>Create</span>
+      </button>
+      {/* Mobile icon-only */}
+      <button
+        type="button"
+        aria-label="Create"
+        onClick={() => setOpen((v) => !v)}
+        className={cn(
+          "lg:hidden grid place-items-center",
+          "h-10 w-10 rounded-lg border border-border bg-surface-elevated",
+          "text-text-muted hover:text-text-primary transition-colors",
+        )}
+      >
+        <Plus className="h-5 w-5" aria-hidden />
+      </button>
+
+      {/* Dropdown */}
+      {open && (
+        <div
+          className={cn(
+            "absolute right-0 top-[calc(100%+8px)] z-[1000] min-w-[160px]",
+            "rounded-[8px] border border-[#212225] bg-[#141517] p-[2px] flex flex-col shadow-2xl",
+          )}
+        >
+          {/* Callout */}
+          <button
+            type="button"
+            onClick={() => { setOpen(false); setCalloutModalOpen(true); }}
+            className="flex items-center gap-[8px] py-[0px] px-[12px] h-[40px] text-[14px] font-[Inter] text-white hover:bg-[#212225] transition-colors w-full text-left rounded-[6px]"
+          >
+            <img src="/Images/Sidedrawer/callout.svg" className="h-[24px]" alt="" />
+            <span>Callout</span>
+          </button>
+
+          {/* Go live */}
+          <button
+            type="button"
+            onClick={() => { setOpen(false); setGoLiveModalOpen(true); }}
+            className="flex items-center gap-[8px] py-[0px] px-[12px] h-[40px] text-[14px] font-[Inter] text-white hover:bg-[#212225] transition-colors w-full text-left rounded-[6px]"
+          >
+            <img src="/Images/Sidedrawer/live.svg" className="h-[24px]" alt="" />
+            <span>Go live</span>
+          </button>
+
+          {/* Create coin */}
+          <button
+            type="button"
+            onClick={() => { setOpen(false); navigate("/create"); }}
+            className="flex items-center gap-[8px] py-[0px] px-[12px] h-[40px] text-[14px] font-[Inter] text-white hover:bg-[#212225] transition-colors w-full text-left rounded-[6px] whitespace-nowrap"
+          >
+            <img src="/Images/Sidedrawer/plus.svg" className="h-[17px]" alt="" />
+            <span>Create coin</span>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
 interface Room {
   id: string;
   name: string;

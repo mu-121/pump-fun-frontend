@@ -43,6 +43,18 @@ interface UiState {
   /** Search modal visibility */
   searchModalOpen: boolean;
   setSearchModalOpen: (v: boolean) => void;
+
+  /** Create dropdown menu open */
+  createMenuOpen: boolean;
+  setCreateMenuOpen: (v: boolean) => void;
+
+  /** Callout modal open */
+  calloutModalOpen: boolean;
+  setCalloutModalOpen: (v: boolean) => void;
+
+  /** Go-live modal open */
+  goLiveModalOpen: boolean;
+  setGoLiveModalOpen: (v: boolean) => void;
 }
 
 export const useUiStore = create<UiState>((set, get) => ({
@@ -70,4 +82,13 @@ export const useUiStore = create<UiState>((set, get) => ({
 
   searchModalOpen: false,
   setSearchModalOpen: (v: boolean) => set({ searchModalOpen: v }),
+
+  createMenuOpen: false,
+  setCreateMenuOpen: (v: boolean) => set({ createMenuOpen: v }),
+
+  calloutModalOpen: false,
+  setCalloutModalOpen: (v: boolean) => set({ calloutModalOpen: v }),
+
+  goLiveModalOpen: false,
+  setGoLiveModalOpen: (v: boolean) => set({ goLiveModalOpen: v }),
 }));
