@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import { formatMarketCap, formatAddress, formatTimeAgo } from '@/lib/format';
 import { cn } from '@/lib/utils';
+import { useUiStore } from '@/stores/uiStore';
 import type { Token } from '@/types';
 
 interface ExploreTokenCardProps {
@@ -275,6 +276,7 @@ export const ExploreTokenCard = memo(function ExploreTokenCard({
 }: ExploreTokenCardProps): JSX.Element {
   const initial = (token.symbol || token.name || '?').slice(0, 1).toUpperCase();
 
+  const searchModalOpen = useUiStore((s) => s.searchModalOpen);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -367,7 +369,7 @@ export const ExploreTokenCard = memo(function ExploreTokenCard({
           </div>
 
           {/* ── TOP-RIGHT: LIVE badge (when live) + star button (always) ── */}
-          <div className="absolute top-2 right-2 z-30 flex items-center gap-1.5">
+          <div className={cn('absolute top-2 right-2 flex items-center gap-1.5', searchModalOpen ? 'z-[-1]' : 'z-30')}>
             {/* LIVE badge — only when live */}
             {isLive && <LiveBadge />}
 

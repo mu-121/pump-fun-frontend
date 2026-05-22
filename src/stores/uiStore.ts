@@ -39,6 +39,10 @@ interface UiState {
   /** Global support widget visibility */
   supportWidgetOpen: boolean;
   setSupportWidgetOpen: (v: boolean) => void;
+
+  /** Search modal visibility */
+  searchModalOpen: boolean;
+  setSearchModalOpen: (v: boolean) => void;
 }
 
 export const useUiStore = create<UiState>((set, get) => ({
@@ -63,4 +67,7 @@ export const useUiStore = create<UiState>((set, get) => ({
 
   supportWidgetOpen: false,
   setSupportWidgetOpen: (v: boolean) => set({ supportWidgetOpen: v }),
+
+  searchModalOpen: false,
+  setSearchModalOpen: (v: boolean) => set({ searchModalOpen: v }),
 }));
