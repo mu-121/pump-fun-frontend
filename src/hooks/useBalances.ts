@@ -17,19 +17,21 @@ export function useSolBalance(): {
   const { connection } = useConnection();
   const { publicKey } = useWallet();
   const owner = publicKey?.toBase58();
+  console.log(owner, publicKey, "ownerrrrrrrrrr");
   const qc = useQueryClient();
-
+  console.log(connection.rpcEndpoint, "url");
   const query = useQuery<bigint>({
     queryKey: ['balance', 'sol', owner],
     queryFn: async () => {
       if (!publicKey) return 0n;
       const lamports = await connection.getBalance(publicKey, 'confirmed');
+      console.log(lamports, "lamportsssssssssss");
       return BigInt(lamports);
     },
     enabled: Boolean(publicKey),
     refetchInterval: POLL_MS,
   });
-
+  console.log(query.data, "querydata")
   return {
     lamports: owner ? (query.data ?? null) : null,
     isLoading: query.isLoading,
@@ -50,7 +52,7 @@ export function useTokenBalance(mint: string | undefined): {
   const { publicKey } = useWallet();
   const owner = publicKey?.toBase58();
   const qc = useQueryClient();
-
+  console.log(owner, "cjeck");
   const mintPk = useMemo(() => {
     if (!mint) return null;
     try {

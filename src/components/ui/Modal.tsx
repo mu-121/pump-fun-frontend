@@ -1,7 +1,7 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
+import { createPortal } from 'react-dom';
 interface ModalProps {
   open: boolean;
   onClose: () => void;
@@ -52,7 +52,7 @@ export function Modal({
 
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center px-4 animate-fade-in"
       role="dialog"
@@ -89,6 +89,7 @@ export function Modal({
         ) : null}
         <div className="p-5">{children}</div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

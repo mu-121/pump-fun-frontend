@@ -56,13 +56,14 @@ export function HomePage(): JSX.Element {
   };
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 font-['Inter']">
       <LiveTape />
 
       {/* Graduating soon */}
       <section>
         <SectionHeader
           title="Graduating soon"
+          className="mb-3"
           icon={<Flame className="h-4 w-4 text-orange-400" />}
           action={
             <button
@@ -91,6 +92,7 @@ export function HomePage(): JSX.Element {
       <section>
         <SectionHeader
           title="Trending now"
+          className="mb-3"
           icon={<TrendingUp className="h-4 w-4 text-primary" />}
         />
         {trendingQuery.isLoading ? (
@@ -113,7 +115,7 @@ export function HomePage(): JSX.Element {
           icon={<LayoutGrid className="h-4 w-4 text-text-muted" />}
         />
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="inline-flex flex-wrap items-center w-fit relative h-auto w-auto justify-start gap-1 rounded-xl border border-[#27272A] bg-[#18191B] p-1 font-['Inter']">
           {EXPLORE_FILTERS.map(({ value, label, icon: Icon }) => {
             const active = sort === value;
             return (
@@ -122,13 +124,13 @@ export function HomePage(): JSX.Element {
                 type="button"
                 onClick={() => setSort(value)}
                 className={cn(
-                  'inline-flex items-center gap-1.5 h-9 px-4 rounded-full text-sm font-medium transition-colors border',
+                  'inline-flex items-center justify-center gap-1.5 whitespace-nowrap font-[Inter] focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 relative z-10 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors duration-200',
                   active
-                    ? 'bg-primary text-background border-primary shadow-glow-primary'
-                    : 'bg-surface-elevated text-text-muted border-border hover:text-text-primary hover:border-text-muted/40',
+                    ? 'bg-[#86EFAC] text-black shadow-sm'
+                    : 'text-[#A1A1AA] hover:bg-[#27272A]/60 hover:text-[#FAFAFA]'
                 )}
               >
-                {Icon ? <Icon className="h-3.5 w-3.5" /> : null}
+                {Icon ? <Icon className={cn("h-4 w-4", active ? "text-black" : "")} /> : null}
                 {label}
               </button>
             );
@@ -160,15 +162,17 @@ function SectionHeader({
   title,
   icon,
   action,
+  className,
 }: {
   title: string;
   icon?: React.ReactNode;
   action?: React.ReactNode;
+  className?: string;
 }): JSX.Element {
   return (
-    <div className="flex items-center justify-between gap-3 mb-3">
-      <h2 className="flex items-center gap-2 text-base sm:text-lg font-semibold tracking-tight text-text-primary">
-        {icon}
+    <div className={cn("flex items-center justify-between gap-3", className)}>
+      <h2 className="font-medium text-[20px] text-[#FAFAFA]">
+        {/* {icon} */}
         {title}
       </h2>
       {action}

@@ -4,6 +4,7 @@ import { TopBar } from './TopBar';
 import { Footer } from './Footer';
 import { MobileNav } from './MobileNav';
 import { WelcomePopup } from '@/components/WelcomePopup';
+import { SupportWidget } from './SupportWidget';
 
 export function MainLayout(): JSX.Element {
   return (
@@ -20,6 +21,7 @@ export function MainLayout(): JSX.Element {
       </div>
       <MobileNav />
       <WelcomePopup />
+      <SupportWidget />
     </div>
   );
 }

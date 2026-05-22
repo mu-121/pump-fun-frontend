@@ -82,13 +82,16 @@
     width: 10px;
     height: 10px;
   }
+
   ::-webkit-scrollbar-track {
     background: transparent;
   }
+
   ::-webkit-scrollbar-thumb {
     background: theme(colors.border);
     border-radius: 4px;
   }
+
   ::-webkit-scrollbar-thumb:hover {
     background: theme(colors.surface-elevated);
   }
@@ -101,18 +104,23 @@
     padding: 0 1rem !important;
     font-size: 0.8125rem !important;
   }
+
   .wallet-adapter-button:hover {
     @apply !bg-primary-600;
   }
+
   .wallet-adapter-button-trigger {
     border-radius: 9999px !important;
   }
+
   .wallet-adapter-modal-wrapper {
     @apply !bg-surface !border !border-border;
   }
+
   .wallet-adapter-modal-title {
     @apply !text-text-primary;
   }
+
   .wallet-adapter-modal-list .wallet-adapter-button {
     @apply !bg-surface-elevated !text-text-primary;
   }
@@ -124,4 +132,11 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
+}
+.box-unset{
+  box-sizing: unset;
+}
+/* Green filter for active icons */
+.icon-active-green {
+  filter: brightness(0) saturate(100%) invert(92%) sepia(31%) saturate(766%) hue-rotate(69deg) brightness(104%) contrast(96%);
 }

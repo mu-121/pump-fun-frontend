@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import toast from 'react-hot-toast';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useWalletModal } from '@solana/wallet-adapter-react-ui';
+import { useWalletModal } from '@/providers/WalletModalProvider';
 import { Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -203,7 +203,7 @@ export function CreateTokenPage(): JSX.Element {
   };
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className="max-w-[1400px]">
       <div className="mb-6">
         <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">Launch a new token</h1>
         <p className="text-sm text-text-muted mt-1">

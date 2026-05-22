@@ -6,7 +6,7 @@ import {
   ConnectionProvider as _ConnectionProvider,
   WalletProvider as _WalletProvider,
 } from '@solana/wallet-adapter-react';
-import { WalletModalProvider as _WalletModalProvider } from '@solana/wallet-adapter-react-ui';
+import { WalletModalProvider } from '@/providers/WalletModalProvider';
 import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
@@ -25,13 +25,12 @@ const ConnectionProvider = _ConnectionProvider as unknown as ComponentType<
 const WalletProvider = _WalletProvider as unknown as ComponentType<
   Parameters<typeof _WalletProvider>[0]
 >;
-const WalletModalProvider = _WalletModalProvider as unknown as ComponentType<
-  Parameters<typeof _WalletModalProvider>[0]
->;
+
 import { Toaster } from 'react-hot-toast';
 import { env } from '@/lib/env';
 
 import '@solana/wallet-adapter-react-ui/styles.css';
+
 
 const queryClient = new QueryClient({
   defaultOptions: {
