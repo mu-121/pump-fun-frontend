@@ -84,10 +84,10 @@ export function TopBar(): JSX.Element {
             <img src='/Images/FirstPopup/logoPumpFun.webp' alt="Pump Fun Logo" className="h-[45px] w-[45px]" />
 
             <a
-              className="text-[18px] font-bold  font-['Museo_Sans'] max-[430px]:text-[14px] text-[#FAFAFA]  hover:underline ml-[12px] max-[400px]:ml-[6px] leading-[120%] "
-              href="https://app.pump.fun/"
-              target="_blank"
-              rel="noopener noreferrer"
+              className="text-[18px] font-bold  font-['Museo_Sans'] max-[430px]:text-[14px] text-[#FAFAFA] ml-[12px] max-[400px]:ml-[6px] leading-[120%] "
+              // href="https://app.pump.fun/"
+              // target="_blank"
+              // rel="noopener noreferrer"
             >
               Trade faster on the pump app
             </a>
