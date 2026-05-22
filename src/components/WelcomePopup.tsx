@@ -48,9 +48,8 @@ export function WelcomePopup(): JSX.Element | null {
   };
 
   return (
-    <div style={{}} className='fixed z-[100] flex items-center justify-center px-4 py-8 bg-black transition-opacity duration-150 [opacity:calc(.75)*_(1-var(--drawer-swipe-progress)))] [outline-color:var(--color-primary-9)]'>
-      <div
-        className="fixed inset-0 z-[100] flex items-center justify-center px-4 py-8"
+    <div
+        className="fixed inset-0 z-[100] flex items-center justify-center px-4 py-8 bg-[rgba(0,0,0,0.75)]"
         role="dialog"
         aria-modal="true"
         aria-labelledby="welcome-title"
@@ -99,7 +98,7 @@ export function WelcomePopup(): JSX.Element | null {
           </div>
         </div>
       </div>
-    </div>
+  
   );
 }
 

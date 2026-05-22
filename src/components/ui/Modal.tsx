@@ -60,13 +60,13 @@ export function Modal({
     >
       <button
         aria-label="Close modal"
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/30"
         onClick={onClose}
       />
       <div
         ref={contentRef}
         className={cn(
-          'relative w-full max-w-md bg-surface border border-border rounded-xl shadow-glow',
+          'relative w-full border border-border shadow-glow',
           className,
         )}
       >
@@ -87,7 +87,7 @@ export function Modal({
             </button>
           </div>
         ) : null}
-        <div className="p-5">{children}</div>
+        <div className="">{children}</div>
       </div>
     </div>,
     document.body,
