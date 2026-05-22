@@ -397,7 +397,7 @@ export function Sidebar(): JSX.Element {
                         isActive && label === "Home"
                           ? "/Images/Sidedrawer/homefill.svg"
                           : isActive && label === "Live"
-                            ? "/Images/Sidedrawer/livefill.svg"
+                            ? "/Images/Sidedrawer/live.svg"
                             : isActive && label === "Callouts"
                               ? "/Images/Sidedrawer/calloutfill.svg"
                               : Icon
