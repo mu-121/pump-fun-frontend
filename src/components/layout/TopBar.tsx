@@ -30,7 +30,8 @@ export function TopBar(): JSX.Element {
   };
 
   return (
-    <> {promoOpen ? (
+    <> 
+    {/* {promoOpen ? (
       <div
         className="
         h-[69.6px]
@@ -149,7 +150,7 @@ export function TopBar(): JSX.Element {
           </div>
         </div>
       </div>
-    ) : null}
+    ) : null} */}
       <header className="flex flex-col sticky top-0 left-0 z-20 bg-bg-primary border-b border-border-secondary">
 
 
